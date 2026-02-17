@@ -6,15 +6,21 @@ import google.generativeai as genai
 from github import Github, Auth
 
 # --- Configuration ---
-# Fetching environment variables
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 REPO = os.getenv('REPO_NAME')
 PR_NUM_STR = os.getenv('PR_NUMBER')
 
-# Critical checks for missing configuration
-if not GEMINI_API_KEY:
-    print("❌ Error: GEMINI_API_KEY is missing!")
+# Collect all available keys into a list
+API_KEYS = [
+    os.getenv('GEMINI_API_KEY'),
+    os.getenv('GEMINI_API_KEY2'),
+    os.getenv('GEMINI_API_KEY3'),
+]
+# Leave only those that are not empty
+valid_api_keys = [k for k in API_KEYS if k]
+
+if not valid_api_keys:
+    print("❌ Error: No GEMINI_API_KEYS found!")
     sys.exit(1)
 
 if not GITHUB_TOKEN or not REPO or not PR_NUM_STR:
@@ -35,7 +41,7 @@ def get_changed_lines_only(patch):
     current_new_line = 0
 
     for line in patch.split('\n'):
-        # Parsing the diff chunk header: @@ -old,count +new,count @@
+        # Parsing the chunk header @@ -old,count +new,count @@
         match = re.match(r'^@@ \-\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@', line)
         if match:
             current_new_line = int(match.group(1))
@@ -45,10 +51,8 @@ def get_changed_lines_only(patch):
             valid_lines.add(current_new_line)
             current_new_line += 1
         elif line.startswith(' '):
-            # Context line, just increment counter
             current_new_line += 1
         elif line.startswith('-'):
-            # Removed line, ignore
             pass
 
     return valid_lines
@@ -67,11 +71,10 @@ file_valid_lines = {}
 
 files = list(pr.get_files())
 for file in files:
-    # Skip deleted, renamed, or empty files
+    # Skip deleted/renamed/empty files
     if file.status in ["removed", "deleted", "renamed"] or not file.patch:
         continue
 
-    # Get set of valid line numbers for this file
     valid_set = get_changed_lines_only(file.patch)
     if not valid_set:
         continue
@@ -83,11 +86,11 @@ if not diff_text.strip():
     print("No commentable changes found.")
     sys.exit(0)
 
-# Truncate diff to safe token limit
+# Truncate to safe limit (approx 8-10k tokens)
 if len(diff_text) > 35000:
     diff_text = diff_text[:35000] + "\n...(truncated)..."
 
-# --- PROMPT ---
+# --- PROMPT ENGINEERING ---
 prompt = f"""
 You are a cynical, hard-to-please Senior Code Reviewer.
 Your goal is to make the code cleaner, safer, and more maintainable.
@@ -114,7 +117,7 @@ JSON Structure:
 [
   {{
     "path": "filename",
-    "line": 10,
+    "line": integer_line_number,
     "body": "Critical feedback here."
   }}
 ]
@@ -123,22 +126,28 @@ Review these changes:
 {diff_text}
 """
 
-# --- AI Request ---
-print("🤖 Connecting to Gemini...")
-try:
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-2.5-flash")
-    
-    response = model.generate_content(
-        prompt,
-        generation_config={"response_mime_type": "application/json"}
-    )
-    raw_content = response.text
-    print("✅ Analysis complete.")
+# --- AI Request with Failover ---
+raw_content = None
+used_model = "gemini-2.5-flash"
 
-except Exception as e:
-    print(f"❌ Gemini API Error: {e}")
-    sys.exit(1)
+for i, key in enumerate(valid_api_keys):
+    try:
+        print(f"🤖 Connecting to Gemini with Key #{i+1}...")
+        genai.configure(api_key=key)
+        model = genai.GenerativeModel(used_model)
+
+        response = model.generate_content(
+            prompt,
+            generation_config={"response_mime_type": "application/json"}
+        )
+        raw_content = response.text
+        print("✅ Analysis complete.")
+        break
+    except Exception as e:
+        print(f"⚠️ Key #{i+1} failed: {e}")
+        if i == len(valid_api_keys) - 1:
+            print("💀 All API keys failed. Exiting.")
+            sys.exit(1)
 
 # --- Parsing & Posting ---
 comments_to_send = []
@@ -147,12 +156,14 @@ try:
     if not raw_content:
         raise ValueError("Empty response from AI")
 
+    # This protects against AI writing intro text like "Here is the review:"
     json_match = re.search(r'\[.*\]', raw_content, re.DOTALL)
 
     if json_match:
         clean_json = json_match.group(0)
         ai_comments = json.loads(clean_json)
     else:
+        # Fallback if regex fails
         clean_json = raw_content.replace("```json", "").replace("```", "").strip()
         ai_comments = json.loads(clean_json)
 
@@ -164,6 +175,7 @@ try:
         if path not in file_valid_lines:
             continue
 
+        # HARD CHECK: Comment ONLY lines with a plus (+)
         if line not in file_valid_lines[path]:
             print(f"⚠️ Skipping comment on line {line} in {path} (not a changed line).")
             continue
@@ -193,7 +205,7 @@ if comments_to_send:
     try:
         pr.create_review(
             commit=last_commit,
-            body="### 🤖 AI Code Review\n_Feedback provided by Gemini Flash_",
+            body="### 🤖 AI Code Review\n",
             event="COMMENT",
             comments=comments_to_send
         )
