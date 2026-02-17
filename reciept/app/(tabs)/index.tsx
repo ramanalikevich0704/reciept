@@ -38,17 +38,6 @@ export default function LoginView() {
               .max(256, 'Максимальное количество символов в пароле 256, уберите лишние символы') 
   }).required();  
 
-  // const {
-  //   control,
-  //   handleSubmit,
-  //   formState: { isValid, errors },
-  // } = useForm({
-  //   mode: "onChange",
-  //   defaultValues: {
-  //     email: "",
-  //     password: "",
-  //   },
-  // });
   const { control, handleSubmit, formState: { isValid, errors } } = useForm<LoginForm>({ 
     mode: "onChange", 
     resolver: yupResolver(loginSchema)
