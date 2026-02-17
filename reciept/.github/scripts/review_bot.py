@@ -24,14 +24,11 @@ if not GITHUB_TOKEN or not REPO or not PR_NUM_STR:
 PR_NUM = int(PR_NUM_STR)
 
 # --- Helper: Strict Diff Parsing ---
-# This logic is crucial. GitHub API rejects comments on lines that are not part
-# of the diff context or added lines. We strictly filter for added lines (+)
-# to minimize API errors (422 Unprocessable Entity).
 def get_changed_lines_only(patch):
     """
     Returns only line numbers that were ADDED (+) in this PR.
     """
-valid_lines = set()
+    valid_lines = set()
     if not patch:
         return valid_lines
 
@@ -70,7 +67,7 @@ file_valid_lines = {}
 
 files = list(pr.get_files())
 for file in files:
-    # Skip deleted, renamed, or empty files as we can't comment on them easily
+    # Skip deleted, renamed, or empty files
     if file.status in ["removed", "deleted", "renamed"] or not file.patch:
         continue
 
@@ -86,15 +83,15 @@ if not diff_text.strip():
     print("No commentable changes found.")
     sys.exit(0)
 
-# Truncate diff to safe token limit (approx 8-10k tokens)
+# Truncate diff to safe token limit
 if len(diff_text) > 35000:
     diff_text = diff_text[:35000] + "\n...(truncated)..."
 
 # --- PROMPT ---
-# Using a strict persona to reduce noise and focus on critical issues
 prompt = f"""
 You are a cynical, hard-to-please Senior Code Reviewer.
 Your goal is to make the code cleaner, safer, and more maintainable.
+
 INSTRUCTIONS:
 1. **Focus strictly on:**
    - Logic bugs and potential runtime errors.
@@ -117,7 +114,7 @@ JSON Structure:
 [
   {{
     "path": "filename",
-    "line": integer_line_number,
+    "line": 10,
     "body": "Critical feedback here."
   }}
 ]
@@ -126,7 +123,7 @@ Review these changes:
 {diff_text}
 """
 
-# --- AI Request (Single Key) ---
+# --- AI Request ---
 print("🤖 Connecting to Gemini...")
 try:
     genai.configure(api_key=GEMINI_API_KEY)
@@ -150,27 +147,23 @@ try:
     if not raw_content:
         raise ValueError("Empty response from AI")
 
-    # Robust parsing: Find JSON array even if the model adds conversational text
     json_match = re.search(r'\[.*\]', raw_content, re.DOTALL)
 
     if json_match:
         clean_json = json_match.group(0)
         ai_comments = json.loads(clean_json)
     else:
-        # Fallback cleanup
         clean_json = raw_content.replace("```json", "").replace("```", "").strip()
         ai_comments = json.loads(clean_json)
 
     for comment in ai_comments:
         path = comment.get('path')
- line = int(comment.get('line', 0))
+        line = int(comment.get('line', 0))
         body = comment.get('body')
 
         if path not in file_valid_lines:
             continue
 
-        # CRITICAL CHECK: Ensure we only comment on lines that were actually added/changed.
-        # This prevents the "Unprocessable Entity" error from GitHub API.
         if line not in file_valid_lines[path]:
             print(f"⚠️ Skipping comment on line {line} in {path} (not a changed line).")
             continue
@@ -191,10 +184,11 @@ except Exception as e:
 
 # --- Batch Posting ---
 if comments_to_send:
-    MAX_COMMENTS = 15 # Limit to prevent API spam or timeouts
+    MAX_COMMENTS = 15
     if len(comments_to_send) > MAX_COMMENTS:
         print(f"Info: Truncating {len(comments_to_send)} comments to top {MAX_COMMENTS}.")
         comments_to_send = comments_to_send[:MAX_COMMENTS]
+
     print(f"🚀 Posting {len(comments_to_send)} comments as a Single Review...")
     try:
         pr.create_review(
