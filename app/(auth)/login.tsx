@@ -1,20 +1,20 @@
 import { Styles } from "@/components/login/LoginStyles";
+import getTokenRepository from "@/src/auth/services/getTokenRepository";
+import saveTokenRepository from "@/src/auth/services/saveTokenRepository";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import saveTokenRepository from "@/app/services/saveTokenRepository";
-import getTokenRepository from "@/app/services/getTokenRepository";
 
+import { Controller, useForm } from "react-hook-form";
 import {
-  TouchableOpacity,
   Image,
   ImageBackground,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useForm, Controller } from "react-hook-form";
 
 interface LoginForm {
   email: string;
@@ -72,8 +72,9 @@ export default function LoginView() {
     saveTokenRepository(apiKey);
   };
   console.log(errors["email"]?.message, isValid);
-  return getTokenRepository === null ? 
-  <View style={{backgroundColor: 'red'}}></View> : (
+  return getTokenRepository === null ? (
+    <View style={{ backgroundColor: "red" }}></View>
+  ) : (
     <View style={Styles.mainBackground}>
       <ImageBackground
         source={bgImage}
