@@ -1,6 +1,4 @@
 import { Styles } from "@/components/login/LoginStyles";
-import getTokenRepository from "@/src/auth/services/getTokenRepository";
-import saveTokenRepository from "@/src/auth/services/saveTokenRepository";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -15,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuthStore } from "@/src/auth/store/useAuthStore";
 
 interface LoginForm {
   email: string;
@@ -55,6 +54,8 @@ const loginSchema = yup.object({
 export default function LoginView() {
   const bgImage = require("@/assets/images/login-background.jpg");
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const login = useAuthStore((state) => state.login);
+  
 
   const {
     control,
@@ -69,12 +70,12 @@ export default function LoginView() {
   const onSubmit = () => {
     console.log("dsd");
     const apiKey = "46ec8567d8a3484895afb7d53572aa5c";
-    saveTokenRepository(apiKey);
+    login(apiKey)
   };
+
   console.log(errors["email"]?.message, isValid);
-  return getTokenRepository === null ? (
-    <View style={{ backgroundColor: "red" }}></View>
-  ) : (
+  
+  return (
     <View style={Styles.mainBackground}>
       <ImageBackground
         source={bgImage}

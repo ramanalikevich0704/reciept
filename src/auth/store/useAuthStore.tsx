@@ -1,4 +1,3 @@
-import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import getTokenRepository from "@/src/auth/services/getTokenRepository";
 import saveTokenRepository from "@/src/auth/services/saveTokenRepository";
