@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         # Added -U to force upgrade to the latest versions
-        run: pip install -U google-generativeai PyGithub
+        run: pip install -U google-genai PyGithub
 
       - name: Run Review
         env:
