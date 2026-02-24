@@ -1,9 +1,8 @@
-// import { getAnalytics } from "firebase/analytics";
-import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp as initFirebaseApp } from "firebase/app";
 // @ts-expect-error: getReactNativePersistence is not in the standard Auth types but works in RN
-import { getReactNativePersistence, initializeAuth } from "firebase/auth";
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import { getFirestore } from "firebase/firestore";
+import SecureFirebaseStorage from "@/src/auth/services/firebase/SecureFirebaseStorage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZxHOmCEu9cmpS4qdvQdEUh2CZJSC25Uc",
@@ -15,10 +14,8 @@ const firebaseConfig = {
   measurementId: "G-BSDMQT682D",
 };
 
-// Initialize Firebase
 export const app = initFirebaseApp(firebaseConfig);
 export const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+  persistence: getReactNativePersistence(SecureFirebaseStorage)
 });
 export const db = getFirestore(app);
-// export const analytics = getAnalytics(app);

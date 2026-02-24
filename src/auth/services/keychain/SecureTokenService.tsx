@@ -6,23 +6,20 @@ import { handleSecureError } from "@/src/auth/services/keychain/SecureErrorHandl
 export default interface RSecureTokenService {
     save: (tokenId: string, token: string) => Promise<void>
     get: (tokenId: string) => Promise<string | null>
-    delete: (tokenId: string)
+    delete: (tokenId: string) => void
 }
 
-export const SecureTokenService: RSecureTokenService = {
+export const secureTokenService: RSecureTokenService = {
     save: async (tokenId: string, value: string) => {
         saveTokenRepository(tokenId, value)
         .catch((error) => handleSecureError(error))
     },
     get: function (tokenId: string): Promise<string | null> {
         return getTokenRepository(tokenId)
-        .catch((error) => handleSecureError(error))
-        // .then((token) => {
-        //     if (token) {
-        //         console.log("Полученный токен:", token);
-        //         return token
-        //     }
-        // });
+        .catch((error) => { 
+            handleSecureError(error)
+            return null
+        })
     },
     delete: function (tokenId: string) {
         deleteTokenRepository(tokenId)
@@ -30,4 +27,4 @@ export const SecureTokenService: RSecureTokenService = {
     }
 };
 
-export const secureTokenService: RSecureTokenService = SecureTokenService
+// export const secureTokenService: RSecureTokenService = SecureTokenService

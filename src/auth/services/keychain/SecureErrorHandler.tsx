@@ -1,4 +1,8 @@
-export const handleSecureError = (error: any) => {
+export const handleSecureError = (error: any, title?: string | null) => {
   const message = error.message || "";
-  alert(message);
+  if (title) {
+    alert(title + message) 
+  } else { 
+    alert(message) 
+  }
 };

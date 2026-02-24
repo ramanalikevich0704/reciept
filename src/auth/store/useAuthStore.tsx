@@ -1,33 +1,23 @@
-import { deleteTokenRepository } from "@/src/auth/services/keychain/deleteTokenRepository";
-import { getTokenRepository } from "@/src/auth/services/keychain/getTokenRepository";
-import { saveTokenRepository } from "@/src/auth/services/keychain/saveTokenRepository";
 import { create } from "zustand";
+import { User } from '@firebase/auth';
 
 interface AuthState {
-  user: any | null;
+  user: User | null;
   isInitialized: boolean;
-  login: (token: string) => Promise<void>;
-  logout: () => Promise<void>;
-  initialize: () => Promise<void>;
+  setUser: (user: User | null) => void;
+  cleanUser: () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isInitialized: false,
 
-  initialize: async () => {
-    const token = await getTokenRepository("api-key");
-    set({ user: token ? { token } : null, isInitialized: true });
+  setUser: (user) => {
+    set({ user , isInitialized: true });//зачем все же он надо?
   },
-
-  login: async (token: string) => {
-    await saveTokenRepository(token);
-    set({ user: { token } });
-  },
-
-  logout: async () => {
-    await deleteTokenRepository();
-    set({ user: null });
+  cleanUser: () => {
+    set({ user: null});
   },
 }));
+
 export { useAuthStore };
