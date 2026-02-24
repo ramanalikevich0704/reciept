@@ -1,7 +1,9 @@
 import { Styles } from "@/components/login/LoginStyles";
+import signUpUserService from "@/src/auth/services/firebase/SignUpUserService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { Controller, useForm } from "react-hook-form";
 import {
   Image,
@@ -13,7 +15,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthStore } from "@/src/auth/store/useAuthStore";
 
 interface LoginForm {
   email: string;
@@ -53,13 +54,10 @@ const loginSchema = yup.object({
 
 export default function LoginView() {
   const bgImage = require("@/assets/images/login-background.jpg");
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const login = useAuthStore((state) => state.login);
-  
 
   const {
     control,
-    watch,
     handleSubmit,
     formState: { isValid, errors },
   } = useForm<LoginForm>({
@@ -67,14 +65,30 @@ export default function LoginView() {
     resolver: yupResolver(loginSchema),
   });
 
-  const onSubmit = () => {
-    console.log("dsd");
-    const apiKey = "46ec8567d8a3484895afb7d53572aa5c";
-    login(apiKey)
+  const onSubmit = (data: LoginForm) => {
+    console.log(data);
+    // const apiKey = "46ec8567d8a3484895afb7d53572aa5c";
+    signUpUserService
+      .signUpUser(
+        {
+          uid: "4534",
+          email: "roma.alikevich8@gmail.com",
+          firstName: "Roman",
+          surname: "Alikevich",
+          phoneNumber: "375 (44) 516-80-98",
+        },
+        data.password,
+      )
+      .catch((err) => console.error(err));
+    // signInUserService.signIn(data.email, data.password)
+    // .then(() => {
+    //   login(apiKey);
+    // })
+    // .catch(err => console.error(err));
   };
 
   console.log(errors["email"]?.message, isValid);
-  
+
   return (
     <View style={Styles.mainBackground}>
       <ImageBackground
@@ -130,7 +144,7 @@ export default function LoginView() {
                       Styles.ordinaryCustomText,
                       Styles.fieldForm,
                     ]}
-                    placeholder={"Enter password"}
+                    placeholder="Enter password"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}

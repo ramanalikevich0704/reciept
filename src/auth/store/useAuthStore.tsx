@@ -1,7 +1,7 @@
+import { deleteTokenRepository } from "@/src/auth/services/keychain/deleteTokenRepository";
+import { getTokenRepository } from "@/src/auth/services/keychain/getTokenRepository";
+import { saveTokenRepository } from "@/src/auth/services/keychain/saveTokenRepository";
 import { create } from "zustand";
-import getTokenRepository from "@/src/auth/services/getTokenRepository";
-import saveTokenRepository from "@/src/auth/services/saveTokenRepository";
-import deleteTokenRepository from "@/src/auth/services/deleteTokenRepository";
 
 interface AuthState {
   user: any | null;
@@ -16,12 +16,12 @@ const useAuthStore = create<AuthState>((set) => ({
   isInitialized: false,
 
   initialize: async () => {
-    const token = await getTokenRepository('api-key');
+    const token = await getTokenRepository("api-key");
     set({ user: token ? { token } : null, isInitialized: true });
   },
 
   login: async (token: string) => {
-    await saveTokenRepository(token)
+    await saveTokenRepository(token);
     set({ user: { token } });
   },
 
@@ -29,5 +29,5 @@ const useAuthStore = create<AuthState>((set) => ({
     await deleteTokenRepository();
     set({ user: null });
   },
-}))
+}));
 export { useAuthStore };
