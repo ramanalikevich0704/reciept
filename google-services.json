@@ -12,7 +12,20 @@
           "package_name": "com.alikevich.reciept"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1017938105677-41spbl72ikd3efotji07c2fge3r1g14d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alikevich.reciept",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1017938105677-kakk78qp2ncvvlhlqpmpmojlhnpieh20.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCmsT388dW1cEfRGilESgmXiemBNZzhuBo"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017938105677-kakk78qp2ncvvlhlqpmpmojlhnpieh20.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1017938105677-fitsmp70jhj2pupqs0ojhgg3vhg54ci7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.alikevich.reciept"
+              }
+            }
+          ]
         }
       }
     }

@@ -2,6 +2,7 @@ import { RUser } from "@/src/auth/models/RUser";
 import signInUserService from "@/src/auth/services/firebase/LoginUserRepository";
 import logoutUserService from "@/src/auth/services/firebase/LogoutUserRepository";
 import signUpUserService from "@/src/auth/services/firebase/SignUpUserRepository";
+import { googleSignIn } from "@/src/auth/services/socialNetwork/GoogleSignInRepository";
 import { handleSecureError } from "@/src/auth/services/keychain/SecureErrorHandler";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { secureTokenService } from "@/src/auth/services/keychain/SecureTokenService";
@@ -10,6 +11,7 @@ interface RAuthService {
   login: (email: string, password: string) => void;
   logout: () => void;
   register: (user: RUser, password: string) => void;
+  googleIn: () => void
 }
 
 const apiKey = "api-key";
@@ -28,17 +30,26 @@ const AuthService: RAuthService = {
   },
   logout: function () {
     logoutUserService.logoutUser().then(() => {
-      useAuthStore.getState().cleanUser()
+      useAuthStore.getState().cleanUser();
       secureTokenService.delete(apiKey);
     });
   },
   register: function (user: RUser, password: string) {
     signUpUserService
       .signUpUser(user, password)
-      .catch((error) =>
-        handleSecureError(error.message, "Ошибка при регистрации:"),
+      .catch((error) => handleSecureError(error.message, "Ошибка при регистрации:")
       );
   },
+  googleIn: function (): void {
+    console.log('googleIn flow')
+    googleSignIn()
+      .then(() => {
+        secureTokenService.save(apiKey, apiToken);
+      })
+      .catch((error) => {
+        handleSecureError(error.message, "Ошибка при авторизации:");
+      });
+  }
 };
 
 export const authService: RAuthService = AuthService;

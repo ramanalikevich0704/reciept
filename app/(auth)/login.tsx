@@ -171,6 +171,7 @@ export default function LoginView() {
             <View style={Styles.socialNetworkContainer}>
               <TouchableOpacity
                 style={[Styles.socialNetworkButton, Styles.bluebutton]}
+                onPress={ authService.googleIn }
                 onPress={() => console.log("Нажато!")}
               >
                 <Image
@@ -180,7 +181,7 @@ export default function LoginView() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[Styles.socialNetworkButton, Styles.whitebutton]}
-                onPress={() => console.log("Нажато!")}
+                onPress={ authService.googleIn }
               >
                 <Image
                   source={require("@/assets/images/google.png")}
