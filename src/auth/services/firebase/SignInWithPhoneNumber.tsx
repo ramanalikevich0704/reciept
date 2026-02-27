@@ -1,12 +1,12 @@
 import {
   PhoneAuthProvider,
   signInWithCredential,
-} from "firebase/auth";
-import { auth } from "@/src/auth/services/firebase/FirebaseConfiguration";
+} from "@react-native-firebase/auth";
+import { authInstance } from "@/src/auth/services/firebase/FirebaseConfiguration";
 import { WebView } from "react-native-webview";
-import { doc, getDoc, getFirestore } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 import { Alert, View } from "react-native";
-import React, { useState } from "react";
+//import React, { useState } from "react";
 import { StyleSheet } from 'react-native';
 
 export async function confirmCode(
@@ -18,15 +18,16 @@ export async function confirmCode(
     const credential = PhoneAuthProvider.credential(verificationId, code);
     
     // Входим в систему!
-    const userCredential = await signInWithCredential(auth, credential);
+    const userCredential = await signInWithCredential(authInstance, credential);
     
     console.log('Победа! Пользователь вошел:', userCredential.user.uid);
 
     if (userCredential.user) {
       // Проверяем, есть ли пользователь в Firestore
-      const db = getFirestore();
-      const userScheme = doc(db, "users", userCredential.user.uid);
-      const user = await getDoc(userScheme);
+      const user = await firestore()
+        .collection("users")
+        .doc(userCredential.user.uid)
+        .get()
 
       if (user.data()) return true;
     }
@@ -47,7 +48,7 @@ export async function sendVerificationCode(
     type: "recaptcha",
     verify: async () => token, // отдаем токен, который поймал WebView
   };
-  const provider = new PhoneAuthProvider(auth);
+  const provider = new PhoneAuthProvider(authInstance);
   // Вызываем капчу
   const vid = await provider.verifyPhoneNumber(phoneNumber, verifier as any);
   setVerificationId(vid);

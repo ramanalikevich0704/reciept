@@ -1,13 +1,12 @@
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 
-const checkUserProfile = async (uid: string | undefined)
-: Promise<boolean | null> => {
+const checkUserProfile = async (
+  uid: string | undefined,
+): Promise<boolean | null> => {
   if (!uid) return null;
-  const db = getFirestore();
-  const userScheme = doc(db, "users", uid);
-  const user = await getDoc(userScheme);
+  const user = await firestore().collection("users").doc(uid).get();
 
-  if (!user.exists()) return null
+  if (!user.exists()) return null;
 
   const userData = user.data();
 

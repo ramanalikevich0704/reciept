@@ -1,12 +1,12 @@
-import { auth } from "@/src/auth/services/firebase/FirebaseConfiguration";
-import { signInWithEmailAndPassword, User } from "firebase/auth";
+import { authInstance } from "@/src/auth/services/firebase/FirebaseConfiguration";
+import { signInWithEmailAndPassword, FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 const signInUser = async (
   email: string,
   password: string,
-): Promise<User | null> => {
+): Promise<FirebaseAuthTypes.User | null> => {
     const userCredential = await signInWithEmailAndPassword(
-      auth,
+      authInstance,
       email,
       password,
     );
@@ -16,7 +16,7 @@ const signInUser = async (
 };
 
 export const getToken = async () => {
-  const user = auth.currentUser;
+  const user = authInstance.currentUser;
   if (user) {
     // forceRefresh: true заставит Firebase выпустить новый токен прямо сейчас
     const token = await user.getIdToken(false);

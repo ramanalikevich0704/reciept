@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { User, onAuthStateChanged } from "firebase/auth";
-import { auth, currentUid } from "@/src/auth/services/firebase/FirebaseConfiguration";
+import { FirebaseAuthTypes, onAuthStateChanged } from "@react-native-firebase/auth";
+import { authInstance, getCurrentUid } from "@/src/auth/services/firebase/FirebaseConfiguration";
 import checkUserProfileService from "@/src/auth/services/firebase/CheckUserProfileRepository";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { Stack, usePathname, useRouter } from "expo-router";
@@ -14,14 +14,14 @@ export default function AuthRouter() {
   const inAuth = path.includes("login"); 
 
   useEffect(() => {
-    const subscriber = onAuthStateChanged(auth, handleAuthStateChanged);
+    const subscriber = onAuthStateChanged(authInstance, handleAuthStateChanged);
     return subscriber;
   }, []);
 
   useEffect(() => {
     if (!isColdStart) return;
 
-    checkUserProfileService.checkUserProfile(currentUid).then((isNotFullUser) => {
+    checkUserProfileService.checkUserProfile(getCurrentUid()).then((isNotFullUser) => {
       console.log("прошла проверка");
       if (isNotFullUser == null && !inAuth) {
         router.replace("/(auth)/login");
@@ -33,7 +33,7 @@ export default function AuthRouter() {
     });
   }, [isColdStart, user, path]);
 
-  function handleAuthStateChanged(user: User | null) {
+  function handleAuthStateChanged(user: FirebaseAuthTypes.User | null) {
     console.log("user:" + user);
     setUser(user);
   }

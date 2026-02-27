@@ -1,7 +1,7 @@
-import { auth } from "@/src/auth/services/firebase/FirebaseConfiguration";
+import { authInstance } from "@/src/auth/services/firebase/FirebaseConfiguration";
 
 const logoutUser = async (): Promise<void> => {
-    await auth.signOut();
+    await authInstance.signOut();
 }
 
 export default { logoutUser };
