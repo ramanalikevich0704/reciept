@@ -1,55 +1,101 @@
 import { RUser } from "@/src/auth/models/RUser";
 import signInUserService from "@/src/auth/services/firebase/LoginUserRepository";
 import logoutUserService from "@/src/auth/services/firebase/LogoutUserRepository";
+import {
+  confirmCode,
+  sendVerificationCode,
+} from "@/src/auth/services/firebase/SignInWithPhoneNumber";
 import signUpUserService from "@/src/auth/services/firebase/SignUpUserRepository";
-import { googleSignIn } from "@/src/auth/services/socialNetwork/GoogleSignInRepository";
 import { handleSecureError } from "@/src/auth/services/keychain/SecureErrorHandler";
-import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { secureTokenService } from "@/src/auth/services/keychain/SecureTokenService";
+import { googleSignIn } from "@/src/auth/services/socialNetwork/GoogleSignInRepository";
+import { useAuthStore } from "@/src/auth/store/useAuthStore";
+import React from "react";
 
+import { useRef, useState } from "react";
 interface RAuthService {
   login: (email: string, password: string) => void;
   logout: () => void;
   register: (user: RUser, password: string) => void;
-  googleIn: () => void
+  googleIn: () => void;
+  signInWithPhoneNumber: (phoneNumber: string) => void;
+  confirmCode: () => void;
 }
 
 const apiKey = "api-key";
 const apiToken = "46ec8567d8a3484895afb7d53572aa5c";
 
-const AuthService: RAuthService = {
-  login: function (email: string, password: string) {
-    signInUserService
-      .signInUser(email, password)
-      .then(() => {
-        secureTokenService.save(apiKey, apiToken);
-      }) //stub because don't want to save api key in firebase for only async tokens
-      .catch((error) => {
-        handleSecureError(error.message, "Ошибка при авторизации:");
+export const useAuth = () => {
+  const [verificationId, setVerificationId] = useState("");
+  const [code, setCode] = useState("");
+  const [token, setToken] = React.useState<string>("");
+  const [showWebView, setShowWebView] = useState(false);
+
+
+
+  const AuthService: RAuthService = {
+    login: function (email: string, password: string) {
+      signInUserService
+        .signInUser(email, password)
+        .then(() => {
+          secureTokenService.save(apiKey, apiToken);
+        }) //stub because don't want to save api key in firebase for only async tokens
+        .catch((error) => {
+          handleSecureError(error.message, "Ошибка при авторизации:");
+        });
+    },
+    logout: function () {
+      logoutUserService.logoutUser().then(() => {
+        useAuthStore.getState().cleanUser();
+        secureTokenService.delete(apiKey);
       });
-  },
-  logout: function () {
-    logoutUserService.logoutUser().then(() => {
-      useAuthStore.getState().cleanUser();
-      secureTokenService.delete(apiKey);
-    });
-  },
-  register: function (user: RUser, password: string) {
-    signUpUserService
-      .signUpUser(user, password)
-      .catch((error) => handleSecureError(error.message, "Ошибка при регистрации:")
+    },
+    register: function (user: RUser, password: string) {
+      signUpUserService
+        .signUpUser(user, password)
+        .catch((error) =>
+          handleSecureError(error.message, "Ошибка при регистрации:"),
+        );
+    },
+    googleIn: function (): void {
+      console.log("googleIn flow");
+      googleSignIn()
+        .then(() => {
+          secureTokenService.save(apiKey, apiToken);
+        })
+        .catch((error) => {
+          handleSecureError(error.message, "Ошибка авторизации через Google:");
+        });
+    },
+    signInWithPhoneNumber: function (phoneNumber: string): void {
+      setShowWebView(true);
+      sendVerificationCode(phoneNumber, token, setVerificationId).catch(
+        (error) => {
+          handleSecureError(error.message, "Ошибка авторизации через телефон:");
+          console.log(".catch((error) =>");
+        },
       );
-  },
-  googleIn: function (): void {
-    console.log('googleIn flow')
-    googleSignIn()
-      .then(() => {
-        secureTokenService.save(apiKey, apiToken);
-      })
-      .catch((error) => {
-        handleSecureError(error.message, "Ошибка при авторизации:");
-      });
+    },
+    confirmCode: function (): void {
+      confirmCode(code, verificationId)
+        .then((isConfirmed) => {
+          if (!isConfirmed) logoutUserService.logoutUser();
+        })
+        .catch((error) => {
+          handleSecureError(error.message, "Ошибка авторизации через телефон:");
+          console.log(".catch((error) =>");
+        });// повторяется, вынести 
+    }
+  };
+  return {
+    AuthService,
+    showWebView,
+    token,
+    setToken,
+    setShowWebView,
+    code,
+    setCode
   }
 };
 
-export const authService: RAuthService = AuthService;
+// export const authService: RAuthService = AuthService;

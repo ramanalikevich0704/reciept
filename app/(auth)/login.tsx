@@ -1,7 +1,8 @@
 import { Styles } from "@/components/login/LoginStyles";
-import { authService } from "@/src/auth/services/AuthService";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Controller, useForm } from "react-hook-form";
 import {
   Image,
@@ -13,6 +14,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { RecaptchaBridge } from "@/src/auth/services/firebase/SignInWithPhoneNumber";
+import { useAuth } from "@/src/auth/services/AuthService";
 
 interface LoginForm {
   email: string;
@@ -53,6 +56,13 @@ const loginSchema = yup.object({
 export default function LoginView() {
   const bgImage = require("@/assets/images/login-background.jpg");
 
+  const { 
+    AuthService, 
+    showWebView, 
+    code, 
+    setCode,
+    setToken
+  } = useAuth();
   const {
     control,
     handleSubmit,
@@ -64,9 +74,14 @@ export default function LoginView() {
 
   const login = (data: LoginForm) => {
     console.log(data);
-    authService.login(data.email, data.password)
+    AuthService.login(data.email, data.password)
   };
   const registerUser = () => {
+    //show another screen
+  };
+
+  const singInWithPhoneNumber = () => {
+    AuthService.signInWithPhoneNumber('375 (44) 516-80-98')
     //show another screen
   };
 
@@ -74,6 +89,10 @@ export default function LoginView() {
 
   return (
     <View style={Styles.mainBackground}>
+      <RecaptchaBridge 
+        onVerify={(token: string) => setToken(token)}
+        showWebView={showWebView}
+        />
       <ImageBackground
         source={bgImage}
         resizeMode="cover"
@@ -170,18 +189,14 @@ export default function LoginView() {
             <Text style={Styles.loginwith}>Login with</Text>
             <View style={Styles.socialNetworkContainer}>
               <TouchableOpacity
-                style={[Styles.socialNetworkButton, Styles.bluebutton]}
-                onPress={ authService.googleIn }
-                onPress={() => console.log("Нажато!")}
+                style={[Styles.socialNetworkButton, Styles.whitebutton]}
+                onPress={ singInWithPhoneNumber }
               >
-                <Image
-                  source={require("@/assets/images/facebook.png")}
-                  style={Styles.iconFacebook}
-                />
+                <Icon name="call" size={30} color="black" />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[Styles.socialNetworkButton, Styles.whitebutton]}
-                onPress={ authService.googleIn }
+                onPress={ AuthService.googleIn }
               >
                 <Image
                   source={require("@/assets/images/google.png")}

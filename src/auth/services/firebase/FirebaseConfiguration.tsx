@@ -4,7 +4,7 @@ import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import { getFirestore } from "firebase/firestore";
 import SecureFirebaseStorage from "@/src/auth/services/firebase/SecureFirebaseStorage";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDZxHOmCEu9cmpS4qdvQdEUh2CZJSC25Uc",
   authDomain: "receipt-92b78.firebaseapp.com",
   projectId: "receipt-92b78",
@@ -19,3 +19,4 @@ export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(SecureFirebaseStorage)
 });
 export const db = getFirestore(app);
+export const currentUid = auth.currentUser?.uid;

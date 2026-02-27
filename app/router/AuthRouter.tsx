@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
-import { User, onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/src/auth/services/firebase/FirebaseConfiguration';
-import { useAuthStore } from '@/src/auth/store/useAuthStore';
+import React, { useEffect } from "react";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { auth, currentUid } from "@/src/auth/services/firebase/FirebaseConfiguration";
+import checkUserProfileService from "@/src/auth/services/firebase/CheckUserProfileRepository";
+import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { Stack, usePathname, useRouter } from "expo-router";
 
 export default function AuthRouter() {
@@ -10,7 +11,7 @@ export default function AuthRouter() {
   const path = usePathname();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const inAuth = path.includes("login"); //сомнительно
+  const inAuth = path.includes("login"); 
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(auth, handleAuthStateChanged);
@@ -18,30 +19,32 @@ export default function AuthRouter() {
   }, []);
 
   useEffect(() => {
-    console.log('Начало процесса навигации')
     if (!isColdStart) return;
-    console.log('Дальше')
-    const authenticated = !!user;
 
-    if (!authenticated && !inAuth) {
-      router.replace("/(auth)/login");
-    } else if (authenticated && inAuth) {
-      router.replace("/(main)/main");
-    }
+    checkUserProfileService.checkUserProfile(currentUid).then((isNotFullUser) => {
+      console.log("прошла проверка");
+      if (isNotFullUser == null && !inAuth) {
+        router.replace("/(auth)/login");
+      } else if (!isNotFullUser && user?.email && inAuth) {
+        router.replace("/(profile)/profile");
+      } else if (isNotFullUser && inAuth) {
+        router.replace("/(main)/main");
+      }
+    });
   }, [isColdStart, user, path]);
 
-  function handleAuthStateChanged(user: User | null
-  ) {
-    console.log('user:' + user)
+  function handleAuthStateChanged(user: User | null) {
+    console.log("user:" + user);
     setUser(user);
   }
 
-  if (!isColdStart) return//add loader or splash
+  if (!isColdStart) return; //add loader or splash
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(main)" />
+      <Stack.Screen name="(profile)" />
     </Stack>
   );
 }
