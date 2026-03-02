@@ -1,9 +1,16 @@
-import React, { useEffect } from "react";
-import { FirebaseAuthTypes, onAuthStateChanged } from "@react-native-firebase/auth";
-import { authInstance, getCurrentUid } from "@/src/auth/services/firebase/FirebaseConfiguration";
 import checkUserProfileService from "@/src/auth/services/firebase/CheckUserProfileRepository";
+import {
+  authInstance,
+  getCurrentUid,
+} from "@/src/auth/services/firebase/FirebaseConfiguration";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
+import {
+  FirebaseAuthTypes,
+  onAuthStateChanged,
+} from "@react-native-firebase/auth";
 import { Stack, usePathname, useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import { string } from "yup";
 
 export default function AuthRouter() {
   const setUser = useAuthStore((state) => state.setUser);
@@ -11,7 +18,7 @@ export default function AuthRouter() {
   const path = usePathname();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const inAuth = path.includes("login"); 
+  const inAuth = path.includes("login");
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(authInstance, handleAuthStateChanged);
@@ -20,18 +27,37 @@ export default function AuthRouter() {
 
   useEffect(() => {
     if (!isColdStart) return;
-
-    checkUserProfileService.checkUserProfile(getCurrentUid()).then((isNotFullUser) => {
-      console.log("прошла проверка");
-      if (isNotFullUser == null && !inAuth) {
-        router.replace("/(auth)/login");
-      } else if (!isNotFullUser && user?.email && inAuth) {
-        router.replace("/(profile)/profile");
-      } else if (isNotFullUser && inAuth) {
-        router.replace("/(main)/main");
-      }
-    });
-  }, [isColdStart, user, path]);
+    let num: number
+    checkUserProfileService
+      .checkUserProfile(getCurrentUid())
+      .then((isProfileFull) => {
+        const onLogin = path.includes("login");
+        const onProfile = path.includes("profile");
+        const onMain = path.includes("main");
+        console.log("НАВИГАААААЦИЯ");
+        console.log(isProfileFull, onLogin, onProfile);
+        // Нет пользователя → логин (только если ещё не на экране логина)
+        // login -> main
+        // login -> profile -> main
+        if (isProfileFull && onLogin) {
+          console.log("1");
+          router.replace("/(main)/main");
+          console.log(1);
+          let numbrt = 1;
+          
+        } else if (
+          !isProfileFull &&
+          (user?.phoneNumber ?? user?.email) &&
+          onLogin
+        ) {
+          console.log("2");
+          router.replace("/(profile)/profile");
+        } else if (onMain || onProfile) {
+          console.log("3");
+          router.replace("/(auth)/login");
+        }
+      });
+  }, [isColdStart, user]);
 
   function handleAuthStateChanged(user: FirebaseAuthTypes.User | null) {
     console.log("user:" + user);

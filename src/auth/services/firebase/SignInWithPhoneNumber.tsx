@@ -1,105 +1,105 @@
 import {
-  PhoneAuthProvider,
-  signInWithCredential,
+  FirebaseAuthTypes
 } from "@react-native-firebase/auth";
 import { authInstance } from "@/src/auth/services/firebase/FirebaseConfiguration";
 import { WebView } from "react-native-webview";
 import firestore from "@react-native-firebase/firestore";
 import { Alert, View } from "react-native";
 //import React, { useState } from "react";
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
+import { Dispatch, SetStateAction } from "react";
+
+/**
+ * Приводит номер к формату E.164 для Firebase: + и только цифры.
+ * Примеры: "375 (44) 516-80-98" → "+375445168098", "375445168098" → "+375445168098"
+ */
+export function toE164(phoneNumber: string): string {
+  const digits = phoneNumber.replace(/\D/g, "");
+  return `+${digits}`;
+}
 
 export async function confirmCode(
   code: string,
-  verificationId: string,
+  confirmation: FirebaseAuthTypes.ConfirmationResult | null,
 ): Promise<boolean> {
-  try {
-    if (!verificationId) throw new Error("Нет ID верификации");
-    const credential = PhoneAuthProvider.credential(verificationId, code);
-    
-    // Входим в систему!
-    const userCredential = await signInWithCredential(authInstance, credential);
-    
-    console.log('Победа! Пользователь вошел:', userCredential.user.uid);
+  console.log("что было до")
+  console.log(authInstance.currentUser)
+  console.log("confirmCode!");
+  // if (!confirmation?.verificationId) return false;
+  const userCredential = await confirmation?.confirm(code);
 
-    if (userCredential.user) {
-      // Проверяем, есть ли пользователь в Firestore
-      const user = await firestore()
-        .collection("users")
-        .doc(userCredential.user.uid)
-        .get()
+  if (userCredential?.user) {
+    // console.log(userCredential?.user)
+    const user = await firestore()
+      .collection("users")
+      .doc(userCredential.user.uid)
+      .get();
 
-      if (user.data()) return true;
-    }
-  } catch (error) {
-    Alert.alert("Ошибка", "Неверный код из SMS", []);
+    console.log("что стало после")
+    console.log(userCredential?.user);
+    console.log(authInstance.currentUser)
+    if (user.data()) return true;
   }
-  // setShowWebView(false)
   return false;
 }
 
 export async function sendVerificationCode(
   phoneNumber: string,
   token: string,
-  setVerificationId: React.Dispatch<React.SetStateAction<string>>
-){
-  // setShowWebView(true)
-  const verifier = {
-    type: "recaptcha",
-    verify: async () => token, // отдаем токен, который поймал WebView
-  };
-  const provider = new PhoneAuthProvider(authInstance);
-  // Вызываем капчу
-  const vid = await provider.verifyPhoneNumber(phoneNumber, verifier as any);
-  setVerificationId(vid);
-  console.log('SMS ушло! Сохранили vId:', vid);
+  setConfirmation: Dispatch<
+    SetStateAction<FirebaseAuthTypes.ConfirmationResult | null>
+  >,
+): Promise<void> {
+  const e164 = toE164(phoneNumber);
+  const confirmation = await authInstance.signInWithPhoneNumber(e164);
+  setConfirmation(confirmation);
+  console.log("SMS ушло!");
 }
 
+// const RECAPTCHA_SITE_KEY = "6LfBYHgsAAAAAPG4cy-180UC0RppfX0VrJ0-Fqft";
+// const BASE_URL = 'https://receipt-92b78.firebaseapp.com';
 
-const RECAPTCHA_SITE_KEY = "6LfBYHgsAAAAAPG4cy-180UC0RppfX0VrJ0-Fqft";
-const BASE_URL = 'https://receipt-92b78.firebaseapp.com';
+// export const RecaptchaBridge = (({ onVerify, showWebView }) => {
+//   const html = `
+//     <html>
+//       <head>
+//         <script src="https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}"></script>
+//         <script>
+//           window.onload = function() {
+//             grecaptcha.ready(function() {
+//               grecaptcha.execute('${RECAPTCHA_SITE_KEY}', {action: 'login'}).then(function(token) {
+//                 window.ReactNativeWebView.postMessage(token);
+//               });
+//             });
+//           };
+//         </script>
+//       </head>
+//       <body></body>
+//     </html>
+//   `;
 
-export const RecaptchaBridge = (({ onVerify, showWebView }) => {
-  const html = `
-    <html>
-      <head>
-        <script src="https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}"></script>
-        <script>
-          window.onload = function() {
-            grecaptcha.ready(function() {
-              grecaptcha.execute('${RECAPTCHA_SITE_KEY}', {action: 'login'}).then(function(token) {
-                window.ReactNativeWebView.postMessage(token);
-              });
-            });
-          };
-        </script>
-      </head>
-      <body></body>
-    </html>
-  `;
-
-  return (
-    <View style={showWebView ? styles.webViewContainer : styles.hidden}>
-      <WebView
-        source={{ html, baseUrl: BASE_URL }}
-        style={{ height: 0, width: 0, opacity: 0 }} // Скрываем WebView
-        onMessage={(event) => onVerify(event.nativeEvent.data)}
-        javaScriptEnabled={true}
-      />
-    </View>
-  );
-});
+//   return (
+//     <View style={showWebView ? styles.webViewContainer : styles.hidden}>
+//       <WebView
+//         source={{ html, baseUrl: BASE_URL }}
+//         style={{ height: 0, width: 0, opacity: 0 }} // Скрываем WebView
+//         onMessage={(event) => onVerify(event.nativeEvent.data)}
+//         javaScriptEnabled={true}
+//       />
+//     </View>
+//   );
+// });
 
 const styles = StyleSheet.create({
   webViewContainer: {
-    flex:1, // Растянуть на весь экран
+    flex: 1, // Растянуть на весь экран
     zIndex: 999, // Поверх всех элементов
-    backgroundColor: 'rgba(0,0,0,0.5)', // Полупрозрачный фон для капчи
+    backgroundColor: "rgba(0,0,0,0.5)", // Полупрозрачный фон для капчи
   },
   hidden: {
     height: 0,
     width: 0,
     opacity: 0,
-    position: 'absolute',
-  }
+    position: "absolute",
+  },
 });

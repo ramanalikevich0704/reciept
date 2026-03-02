@@ -1,5 +1,5 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { GoogleAuthProvider, getAuth, signInWithCredential } from 'firebase/auth';
+import { GoogleAuthProvider, getAuth, signInWithCredential } from '@react-native-firebase/auth';
 
 export async function googleSignIn() {
   

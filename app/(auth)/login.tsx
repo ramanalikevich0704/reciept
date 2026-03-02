@@ -14,13 +14,23 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { RecaptchaBridge } from "@/src/auth/services/firebase/SignInWithPhoneNumber";
+import { useRouter } from "expo-router";
 import { useAuth } from "@/src/auth/services/AuthService";
 
 interface LoginForm {
   email: string;
   password: string;
 }
+
+// Прочитать про this?
+// смена контекста колл эплай байнд
+// ref типы, как копировать или делать ссылку
+// ScrollView и FlatList
+// флэш лист
+// типы копирования
+//асинхронность
+//use memo, use callback
+//custom hook
 
 const loginSchema = yup.object({
   email: yup
@@ -56,6 +66,7 @@ const loginSchema = yup.object({
 export default function LoginView() {
   const bgImage = require("@/assets/images/login-background.jpg");
 
+  const router = useRouter();
   const { 
     AuthService, 
     showWebView, 
@@ -73,15 +84,15 @@ export default function LoginView() {
   });
 
   const login = (data: LoginForm) => {
-    console.log(data);
+    // console.log(data);
     AuthService.login(data.email, data.password)
   };
   const registerUser = () => {
-    //show another screen
+    router.push("/(auth)/register");
   };
 
   const singInWithPhoneNumber = () => {
-    AuthService.signInWithPhoneNumber('375 (44) 516-80-98')
+    AuthService.signInWithPhoneNumber('+375445168098')
     //show another screen
   };
 
@@ -89,10 +100,6 @@ export default function LoginView() {
 
   return (
     <View style={Styles.mainBackground}>
-      <RecaptchaBridge 
-        onVerify={(token: string) => setToken(token)}
-        showWebView={showWebView}
-        />
       <ImageBackground
         source={bgImage}
         resizeMode="cover"

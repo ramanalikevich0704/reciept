@@ -10,9 +10,10 @@ import { handleSecureError } from "@/src/auth/services/keychain/SecureErrorHandl
 import { secureTokenService } from "@/src/auth/services/keychain/SecureTokenService";
 import { googleSignIn } from "@/src/auth/services/socialNetwork/GoogleSignInRepository";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import React from "react";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 interface RAuthService {
   login: (email: string, password: string) => void;
   logout: () => void;
@@ -26,15 +27,15 @@ const apiKey = "api-key";
 const apiToken = "46ec8567d8a3484895afb7d53572aa5c";
 
 export const useAuth = () => {
-  const [verificationId, setVerificationId] = useState("");
+  const [confirmation, setConfirmation] =
+    useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
   const [code, setCode] = useState("");
   const [token, setToken] = React.useState<string>("");
   const [showWebView, setShowWebView] = useState(false);
 
-
-
   const AuthService: RAuthService = {
     login: function (email: string, password: string) {
+      // logoutUserService.logoutUser()
       signInUserService
         .signInUser(email, password)
         .then(() => {
@@ -68,24 +69,33 @@ export const useAuth = () => {
         });
     },
     signInWithPhoneNumber: function (phoneNumber: string): void {
-      setShowWebView(true);
-      sendVerificationCode(phoneNumber, token, setVerificationId).catch(
-        (error) => {
-          handleSecureError(error.message, "Ошибка авторизации через телефон:");
-          console.log(".catch((error) =>");
-        },
-      );
-    },
-    confirmCode: function (): void {
-      confirmCode(code, verificationId)
-        .then((isConfirmed) => {
-          if (!isConfirmed) logoutUserService.logoutUser();
+      // setShowWebView(true);
+      console.log("вошел в sendVerificationCode");
+      // logoutUserService.logoutUser()
+      sendVerificationCode(phoneNumber, token, setConfirmation)
+        .then(() => {
+          // console.log("вошел в confirmCode");
+          confirmCode('111111', confirmation);
         })
         .catch((error) => {
           handleSecureError(error.message, "Ошибка авторизации через телефон:");
+          // console.log("Ошибка верификации");
+          // console.log(error);
+          // console.log(error.code);
+        });
+    },
+    confirmCode: function (): void {
+      // console.log("вошел в sendVerificationCode");
+      confirmCode(code, confirmation)
+        .then((isConfirmed) => {
+          // if (!isConfirmed) logoutUserService.logoutUser();
+          //добавить навигацию на заполнение профиля или же на главную
+        })
+        .catch((error) => {
+          handleSecureError("Ошибка", "Неверный код из SMS");
           console.log(".catch((error) =>");
-        });// повторяется, вынести 
-    }
+        }); // повторяется, вынести
+    },
   };
   return {
     AuthService,
@@ -94,8 +104,8 @@ export const useAuth = () => {
     setToken,
     setShowWebView,
     code,
-    setCode
-  }
+    setCode,
+  };
 };
 
 // export const authService: RAuthService = AuthService;

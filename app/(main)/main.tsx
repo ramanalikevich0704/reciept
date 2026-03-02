@@ -1,12 +1,13 @@
 import { Styles } from "@/components/login/LoginStyles";
-import { authService } from "@/src/auth/services/AuthService";
+import { useAuth } from "@/src/auth/services/AuthService";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MainView() {
+  const { AuthService } = useAuth();
 
   const onSubmit = () => {
-    authService.logout()
+    AuthService.logout()
   };
 
   return (

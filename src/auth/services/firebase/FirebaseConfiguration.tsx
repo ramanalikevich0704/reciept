@@ -1,5 +1,5 @@
 // import { initializeApp as initFirebaseApp } from "firebase/app";
-import auth from '@react-native-firebase/auth';
+import getAuth from "@react-native-firebase/auth";
 // import SecureFirebaseStorage from "@/src/auth/services/firebase/SecureFirebaseStorage";
 
 // export const firebaseConfig = {
@@ -16,5 +16,6 @@ import auth from '@react-native-firebase/auth';
 // export const auth = initializeAuth(app, {
 //   persistence: getReactNativePersistence(SecureFirebaseStorage)
 // });
-export const authInstance = auth()
-export const getCurrentUid = () => auth().currentUser?.uid
+const auth = getAuth();
+export const authInstance = auth;
+export const getCurrentUid = () => auth.currentUser?.uid;
