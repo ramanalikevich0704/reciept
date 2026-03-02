@@ -57,8 +57,8 @@ export const Styles = StyleSheet.create({
   },
   mainBackground: { 
     height: "100%",
-     width: "100%",
-      backgroundColor: "black" 
+    width: "100%",
+    backgroundColor: "black" 
   },
   imageBackgroundImageStyle: {
     flex: 1,

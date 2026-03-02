@@ -1,8 +1,8 @@
 import { Styles } from "@/components/login/LoginStyles";
 
+import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import Icon from 'react-native-vector-icons/Ionicons';
+import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import {
   Image,
@@ -14,8 +14,8 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import { useAuth } from "@/src/auth/services/AuthService";
+import Icon from 'react-native-vector-icons/Ionicons';
+import * as yup from "yup";
 
 interface LoginForm {
   email: string;

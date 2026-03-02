@@ -1,5 +1,5 @@
 export interface RUser {
-  uid: string;
+  uid: string | null;
   email: string;
   firstName: string;
   surname: string;
