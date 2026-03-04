@@ -36,24 +36,23 @@ export async function confirmCode(
       .get();
 
     console.log("что стало после")
+    // console.log(authInstance.currentUser)
+    console.log(user.data())
     console.log(userCredential?.user);
-    console.log(authInstance.currentUser)
-    if (user.data()) return true;
+    if (userCredential?.user) return true;
   }
   return false;
 }
 
 export async function sendVerificationCode(
   phoneNumber: string,
-  token: string,
-  setConfirmation: Dispatch<
-    SetStateAction<FirebaseAuthTypes.ConfirmationResult | null>
-  >,
-): Promise<void> {
+  token: string
+): Promise<FirebaseAuthTypes.ConfirmationResult> {
   const e164 = toE164(phoneNumber);
   const confirmation = await authInstance.signInWithPhoneNumber(e164);
-  setConfirmation(confirmation);
+  // setConfirmation(confirmation);
   console.log("SMS ушло!");
+  return confirmation
 }
 
 // const RECAPTCHA_SITE_KEY = "6LfBYHgsAAAAAPG4cy-180UC0RppfX0VrJ0-Fqft";

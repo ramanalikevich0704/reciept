@@ -140,3 +140,10 @@ export const Styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export const fieldStyle = [
+  Styles.field,
+  Styles.element,
+  Styles.ordinaryCustomText,
+  Styles.fieldForm,
+];

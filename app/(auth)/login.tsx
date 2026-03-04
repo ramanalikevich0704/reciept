@@ -4,18 +4,18 @@ import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from 'react-native-vector-icons/Ionicons';
+import * as yup from "yup";
+import { getEmailRules, getPasswordRules } from "@/app/(auth)/static/static-regex";
+import { AppBackground } from "@/components/AppBackground";
 import {
   Image,
-  ImageBackground,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from 'react-native-vector-icons/Ionicons';
-import * as yup from "yup";
 
 interface LoginForm {
   email: string;
@@ -31,41 +31,18 @@ interface LoginForm {
 //асинхронность
 //use memo, use callback
 //custom hook
+//методы промиса!!!
+
+//как происходит рендеринг компонентов
+// про дом в RN почитать
+//Как сделать плавную анимацию?
 
 const loginSchema = yup.object({
-  email: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) {
-        return false;
-      }
-      return true;
-    })
-    .min(2, "Введите более двух символов")
-    .matches(/[@]/, "Необходимо написать @")
-    .matches(/[.]/, "Допишите почтовый домен")
-    .email("Поле email не соответствует формату"),
-  password: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) {
-        return false;
-      }
-      return true;
-    })
-    .min(8, "Введите 8 и более символов в пароле")
-    .matches(/(?=.*\d)/, "Введите хотя бы одну цифру")
-    .matches(/(?=.*[A-Za-z])/, "Введите хотя бы одну букву")
-    .matches(/[@$!%*?&)()]/, "Введите хотя бы один символ")
-    .max(
-      256,
-      "Максимальное количество символов в пароле 256, уберите лишние символы",
-    ),
+  email: getEmailRules(),
+  password: getPasswordRules()
 });
 
 export default function LoginView() {
-  const bgImage = require("@/assets/images/login-background.jpg");
-
   const router = useRouter();
   const { 
     AuthService, 
@@ -84,30 +61,19 @@ export default function LoginView() {
   });
 
   const login = (data: LoginForm) => {
-    // console.log(data);
     AuthService.login(data.email, data.password)
   };
   const registerUser = () => {
     router.push("/(auth)/register");
   };
 
-  const singInWithPhoneNumber = () => {
-    AuthService.signInWithPhoneNumber('+375445168098')
-    //show another screen
+  const openPhoneInput = () => {
+    router.push("/(auth)/phone-input");
   };
 
-  console.log(errors["email"]?.message, isValid);
-
   return (
-    <View style={Styles.mainBackground}>
-      <ImageBackground
-        source={bgImage}
-        resizeMode="cover"
-        style={Styles.imageBackgroundStyle}
-        imageStyle={Styles.imageBackgroundImageStyle}
-      >
-        <View style={[StyleSheet.absoluteFillObject, Styles.blurColor]} />
-        <SafeAreaView style={Styles.safeArea}>
+    <AppBackground>
+      <SafeAreaView style={Styles.safeArea}>
           <View style={{ marginTop: 44 }}>
             <View>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
@@ -197,7 +163,7 @@ export default function LoginView() {
             <View style={Styles.socialNetworkContainer}>
               <TouchableOpacity
                 style={[Styles.socialNetworkButton, Styles.whitebutton]}
-                onPress={ singInWithPhoneNumber }
+                onPress={openPhoneInput}
               >
                 <Icon name="call" size={30} color="black" />
               </TouchableOpacity>
@@ -231,8 +197,7 @@ export default function LoginView() {
               </Text>
             </TouchableOpacity>
           </View>
-        </SafeAreaView>
-      </ImageBackground>
-    </View>
+      </SafeAreaView>
+    </AppBackground>
   );
 }

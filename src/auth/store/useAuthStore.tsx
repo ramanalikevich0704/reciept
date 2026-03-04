@@ -2,10 +2,16 @@ import { create } from "zustand";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 interface AuthState {
-  user: FirebaseAuthTypes.User | null;
-  isInitialized: boolean;
+  readonly user: FirebaseAuthTypes.User | null;
+  readonly isInitialized: boolean;
   setUser: (user: FirebaseAuthTypes.User | null) => void;
   cleanUser: () => void;
+  /** Вход по телефону: результат sendVerificationCode (общий для phone-input и sms-code) */
+  confirmation: FirebaseAuthTypes.ConfirmationResult | null;
+  setConfirmation: (c: FirebaseAuthTypes.ConfirmationResult | null) => void;
+  code: string;
+  setCode: (c: string) => void;
+  clearPhoneAuth: () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
@@ -13,11 +19,17 @@ const useAuthStore = create<AuthState>((set) => ({
   isInitialized: false,
 
   setUser: (user) => {
-    set({ user , isInitialized: true });//зачем все же он надо?
+    set({ user, isInitialized: true });
   },
   cleanUser: () => {
-    set({ user: null});
+    set({ user: null });
   },
+
+  confirmation: null,
+  setConfirmation: (confirmation) => set({ confirmation }),
+  code: "",
+  setCode: (code) => set({ code }),
+  clearPhoneAuth: () => set({ confirmation: null, code: "" }),
 }));
 
 export { useAuthStore };

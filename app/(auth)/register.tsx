@@ -1,10 +1,10 @@
-import { Styles } from "@/components/login/LoginStyles";
+import { AppBackground } from "@/components/AppBackground";
+import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "@/src/auth/services/AuthService";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import {
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,9 +15,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/Ionicons";
-
-// Формат телефона: 375 (44) 516-80-98
-const PHONE_REGEX = /^375\s*\(\d{2}\)\s*\d{3}-\d{2}-\d{2}$/;
+import { formatPhoneMask } from "@/app/(auth)/static/static";
+import { 
+  getConfirmPasswordRules,
+  getEmailRules,
+  getNameRules,
+  getPasswordRules, 
+  getPhoneNumberRules, 
+  getSurnameRules } from "@/app/(auth)/static/static-regex";
 
 interface RegisterForm {
   email: string;
@@ -29,72 +34,16 @@ interface RegisterForm {
 }
 
 const registerSchema = yup.object({
-  email: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) return false;
-      return true;
-    })
-    .min(2, "Введите более двух символов")
-    .max(256, "Максимально доступная длинная 256 символов")
-    .matches(/[@]/, "Необходимо написать @")
-    .matches(/[.]/, "Допишите почтовый домен")
-    .email("Поле email не соответствует формату"),
-  name: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) return false;
-      return true;
-    })
-    .min(1, "Поле является обязательным, нужно ввести данные")
-    .max(256, "Максимально доступная длинная 256 символов")
-    .matches(/^[a-zA-Zа-яА-ЯёЁ\s-]+$/, "Имя может содержать только буквы, пробелы и дефис"),
-  surname: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) return false;
-      return true;
-    })
-    .min(1, "Поле является обязательным, нужно ввести данные")
-    .max(256, "Максимально доступная длинная 256 символов")
-    .matches(/^[a-zA-Zа-яА-ЯёЁ\s-]+$/, "Фамилия может содержать только буквы, пробелы и дефис"),
-  phonenumber: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) return false;
-      return true;
-    })
-    .matches(PHONE_REGEX, "Введите номер в формате 375 (44) 516-80-98"),
-  password: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) return false;
-      return true;
-    })
-    .min(8, "Введите 8 и более символов в пароле")
-    .matches(/(?=.*\d)/, "Введите хотя бы одну цифру")
-    .matches(/(?=.*[A-Za-z])/, "Введите хотя бы одну букву")
-    .matches(/[@$!%*?&)()]/, "Введите хотя бы один символ")
-    .max(256, "Максимальное количество символов в пароле 256"),
-  confirmPassword: yup
-    .string()
-    .test("check-empty", "", function (value) {
-      if (value?.length === 0) return false;
-      return true;
-    })
-    .oneOf([yup.ref("password")], "Пароли не совпадают"),
+  email: getEmailRules(),
+  name: getNameRules(),
+  surname: getSurnameRules(),
+  phonenumber: getPhoneNumberRules(),
+  password: getPasswordRules(),
+  confirmPassword: getConfirmPasswordRules(),
 });
-
-const fieldStyle = [
-  Styles.field,
-  Styles.element,
-  Styles.ordinaryCustomText,
-  Styles.fieldForm,
-];
 
 export default function RegisterView() {
   const router = useRouter();
-  const bgImage = require("@/assets/images/login-background.jpg");
 
   const {
     control,
@@ -107,25 +56,21 @@ export default function RegisterView() {
   const { AuthService } = useAuth();
 
   const onRegister = (data: RegisterForm) => {
-    AuthService.register({
-      uid: null,
-      email: data.email,
-      firstName: data.name,
-      surname: data.surname,
-      phoneNumber: data.phonenumber
-    }, data.password)
+    AuthService.register(
+      {
+        uid: null,//нужно ли здесь генерить?
+        email: data.email,
+        firstName: data.name,
+        surname: data.surname,
+        phoneNumber: data.phonenumber,
+      },
+      data.password
+    );
   };
 
   return (
-    <View style={Styles.mainBackground}>
-      <ImageBackground
-        source={bgImage}
-        resizeMode="cover"
-        style={Styles.imageBackgroundStyle}
-        imageStyle={Styles.imageBackgroundImageStyle}
-      >
-        <View style={[StyleSheet.absoluteFillObject, Styles.blurColor]} />
-        <SafeAreaView style={Styles.safeArea}>
+    <AppBackground>
+      <SafeAreaView style={Styles.safeArea}>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => router.back()}
@@ -213,12 +158,13 @@ export default function RegisterView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, styles.input]}
-                    placeholder="Введите номер телефона"
+                    placeholder="+375 (44) 516-80-98"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
-                    onChangeText={onChange}
+                    onChangeText={(text) => onChange(formatPhoneMask(text))}
                     value={value}
                     keyboardType="phone-pad"
+                    maxLength={19}
                   />
                 )}
                 name="phonenumber"
@@ -294,9 +240,8 @@ export default function RegisterView() {
               </Text>
             </View>
           </ScrollView>
-        </SafeAreaView>
-      </ImageBackground>
-    </View>
+      </SafeAreaView>
+    </AppBackground>
   );
 }
 

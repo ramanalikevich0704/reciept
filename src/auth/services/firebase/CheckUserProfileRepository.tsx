@@ -5,12 +5,10 @@ const checkUserProfile = async (
 ): Promise<boolean | null> => {
   if (!uid) return false;
   const user = await firestore().collection("users").doc(uid).get();
-
   if (!user.exists()) return false;
 
   const userData = user.data();
-
-  return (
+  return !!(
     userData?.email &&
     userData?.name &&
     userData?.surname &&

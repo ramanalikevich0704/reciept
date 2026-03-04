@@ -1,3 +1,9 @@
+import {
+  ALLOWED_TRANSITIONS,
+  getNavigationEvent,
+  pathToScreenId,
+  SCREENS,
+} from "@/app/router/navigationGraph";
 import checkUserProfileService from "@/src/auth/services/firebase/CheckUserProfileRepository";
 import {
   authInstance,
@@ -10,7 +16,6 @@ import {
 } from "@react-native-firebase/auth";
 import { Stack, usePathname, useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { string } from "yup";
 
 export default function AuthRouter() {
   const setUser = useAuthStore((state) => state.setUser);
@@ -18,7 +23,6 @@ export default function AuthRouter() {
   const path = usePathname();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const inAuth = path.includes("login");
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(authInstance, handleAuthStateChanged);
@@ -27,44 +31,28 @@ export default function AuthRouter() {
 
   useEffect(() => {
     if (!isColdStart) return;
-    let num: number
     checkUserProfileService
       .checkUserProfile(getCurrentUid())
       .then((isProfileFull) => {
-        const onLogin = path.includes("login");
-        const onProfile = path.includes("profile");
-        const onMain = path.includes("main");
-        console.log("НАВИГАААААЦИЯ");
-        console.log(isProfileFull, onLogin, onProfile);
-        // Нет пользователя → логин (только если ещё не на экране логина)
-        // login -> main
-        // login -> profile -> main
-        if (isProfileFull && onLogin) {
-          console.log("1");
-          router.replace("/(main)/main");
-          console.log(1);
-          let numbrt = 1;
-          
-        } else if (
-          !isProfileFull &&
-          (user?.phoneNumber ?? user?.email) &&
-          onLogin
-        ) {
-          console.log("2");
-          router.replace("/(profile)/profile");
-        } else if (onMain || onProfile) {
-          console.log("3");
-          router.replace("/(auth)/login");
+        const currentScreen = pathToScreenId(path);
+        if (currentScreen === null) return;
+
+        const event = getNavigationEvent(currentScreen, user, !!isProfileFull);
+        const nextScreen = event
+          ? ALLOWED_TRANSITIONS[currentScreen]?.[event]
+          : undefined;
+
+        if (nextScreen) {
+          router.replace(SCREENS[nextScreen]);
         }
       });
-  }, [isColdStart, user]);
+  }, [isColdStart, user, path]);
 
   function handleAuthStateChanged(user: FirebaseAuthTypes.User | null) {
-    console.log("user:" + user);
     setUser(user);
   }
 
-  if (!isColdStart) return; //add loader or splash
+  if (!isColdStart) return; // add loader or splash
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
