@@ -17,8 +17,7 @@ export default function MainView() {
           Styles.button,
           Styles.centerPosition,
           Styles.element,
-          Styles.centerPosition,
-          Styles.element,
+          Styles.centerPosition
         ]}
         onPress={onSubmit}
       >

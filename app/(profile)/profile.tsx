@@ -1,4 +1,5 @@
 import { AppBackground } from "@/components/AppBackground";
+import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
@@ -126,9 +127,7 @@ export default function ProfileView() {
                 )}
                 name="email"
               />
-              {errors.email?.message && (
-                <Text style={Styles.errorText}>{errors.email.message}</Text>
-              )}
+              <FormError message={errors.email?.message} />
 
               <Controller
                 control={control}
@@ -145,9 +144,7 @@ export default function ProfileView() {
                 )}
                 name="name"
               />
-              {errors.name?.message && (
-                <Text style={Styles.errorText}>{errors.name.message}</Text>
-              )}
+              <FormError message={errors.name?.message} />
 
               <Controller
                 control={control}
@@ -164,9 +161,7 @@ export default function ProfileView() {
                 )}
                 name="surname"
               />
-              {errors.surname?.message && (
-                <Text style={Styles.errorText}>{errors.surname.message}</Text>
-              )}
+              <FormError message={errors.surname?.message} />
 
               <Controller
                 control={control}
@@ -184,11 +179,7 @@ export default function ProfileView() {
                 )}
                 name="phonenumber"
               />
-              {errors.phonenumber?.message && (
-                <Text style={Styles.errorText}>
-                  {errors.phonenumber.message}
-                </Text>
-              )}
+              <FormError message={errors.phonenumber?.message} />
 
               <TouchableOpacity
                 style={[

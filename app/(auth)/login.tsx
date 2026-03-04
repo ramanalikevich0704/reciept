@@ -1,4 +1,4 @@
-import { Styles } from "@/components/login/LoginStyles";
+import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 
 import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as yup from "yup";
 import { getEmailRules, getPasswordRules } from "@/app/(auth)/static/static-regex";
 import { AppBackground } from "@/components/AppBackground";
+import { FormError } from "@/components/FormError";
 import {
   Image,
   Text,
@@ -90,11 +91,7 @@ export default function LoginView() {
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[
-                      Styles.field,
-                      Styles.element,
-                      Styles.ordinaryCustomText,
-                      Styles.fieldForm,
+                    style={[...fieldStyle,
                       { marginBottom: 12 },
                     ]}
                     placeholder={"Enter email"}
@@ -106,19 +103,12 @@ export default function LoginView() {
                 )}
                 name="email"
               />
-              {errors["email"] && errors["email"].message && (
-                <Text style={[Styles.errorText]}>{errors.email.message}</Text>
-              )}
+              <FormError message={errors.email?.message} />
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[
-                      Styles.field,
-                      Styles.element,
-                      Styles.ordinaryCustomText,
-                      Styles.fieldForm,
-                    ]}
+                    style={[...fieldStyle]}
                     placeholder="Enter password"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -129,18 +119,14 @@ export default function LoginView() {
                 )}
                 name="password"
               />
-              {errors["password"] && errors["password"].message && (
-                <Text style={[Styles.errorText]}>
-                  {errors.password.message}
-                </Text>
-              )}
+              <FormError message={errors.password?.message} />
             </View>
-            <Text
+            {/* <Text
               style={Styles.forgetPassword}
               onPress={() => alert("Текст нажат!")}
             >
               Forget password?
-            </Text>
+            </Text> */}
             <TouchableOpacity
               style={[
                 Styles.button,

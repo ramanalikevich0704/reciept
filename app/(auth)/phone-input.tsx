@@ -1,4 +1,5 @@
 import { AppBackground } from "@/components/AppBackground";
+import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
 import * as yup from "yup";
@@ -94,11 +95,7 @@ export default function PhoneInputView() {
                 )}
                 name="phonenumber"
               />
-              {errors.phonenumber?.message && (
-                <Text style={Styles.errorText}>
-                  {errors.phonenumber.message}
-                </Text>
-              )}
+              <FormError message={errors.phonenumber?.message} />
 
               <TouchableOpacity
                 style={[Styles.button, Styles.centerPosition, Styles.element]}

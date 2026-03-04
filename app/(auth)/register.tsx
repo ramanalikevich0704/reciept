@@ -1,4 +1,5 @@
 import { AppBackground } from "@/components/AppBackground";
+import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "@/src/auth/services/AuthService";
@@ -111,9 +112,7 @@ export default function RegisterView() {
                 )}
                 name="email"
               />
-              {errors.email?.message && (
-                <Text style={Styles.errorText}>{errors.email.message}</Text>
-              )}
+              <FormError message={errors.email?.message} />
 
               <Controller
                 control={control}
@@ -130,9 +129,7 @@ export default function RegisterView() {
                 )}
                 name="name"
               />
-              {errors.name?.message && (
-                <Text style={Styles.errorText}>{errors.name.message}</Text>
-              )}
+              <FormError message={errors.name?.message} />
 
               <Controller
                 control={control}
@@ -149,9 +146,7 @@ export default function RegisterView() {
                 )}
                 name="surname"
               />
-              {errors.surname?.message && (
-                <Text style={Styles.errorText}>{errors.surname.message}</Text>
-              )}
+              <FormError message={errors.surname?.message} />
 
               <Controller
                 control={control}
@@ -169,11 +164,7 @@ export default function RegisterView() {
                 )}
                 name="phonenumber"
               />
-              {errors.phonenumber?.message && (
-                <Text style={Styles.errorText}>
-                  {errors.phonenumber.message}
-                </Text>
-              )}
+              <FormError message={errors.phonenumber?.message} />
 
               <Controller
                 control={control}
@@ -190,9 +181,7 @@ export default function RegisterView() {
                 )}
                 name="password"
               />
-              {errors.password?.message && (
-                <Text style={Styles.errorText}>{errors.password.message}</Text>
-              )}
+              <FormError message={errors.password?.message} />
 
               <Controller
                 control={control}
@@ -209,11 +198,7 @@ export default function RegisterView() {
                 )}
                 name="confirmPassword"
               />
-              {errors.confirmPassword?.message && (
-                <Text style={Styles.errorText}>
-                  {errors.confirmPassword.message}
-                </Text>
-              )}
+              <FormError message={errors.confirmPassword?.message} />
 
               <TouchableOpacity
                 style={[
