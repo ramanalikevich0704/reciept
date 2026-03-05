@@ -19,7 +19,7 @@ import React from "react";
 import { useState } from "react";
 interface RAuthService {
   login: (email: string, password: string) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   register: (user: RUser, password: string) => void;
   updateProfile: (data: ProfileData) => Promise<void>;
   googleIn: () => void;
@@ -54,7 +54,7 @@ export const useAuth = () => {
         });
     },
     logout: function () {
-      logoutUserService.logoutUser().then(() => {
+      return logoutUserService.logoutUser().then(() => {
         useAuthStore.getState().cleanUser();
         secureTokenService.delete(apiKey);
       });

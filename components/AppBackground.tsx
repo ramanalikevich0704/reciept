@@ -8,8 +8,10 @@ import {
 } from "react-native";
 
 const defaultImage = require("@/assets/images/login-background.jpg");
+/** Фон для главного экрана (подставляется @1x/@2x/@3x по плотности экрана) */
+export const recieptBackgroundImage = require("@/assets/images/reciept-background.png");
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   root: {
     height: "100%",
     width: "100%",
@@ -18,6 +20,14 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     paddingHorizontal: 20,
+  },
+  recieptImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    width: '100%', // Обязательно для абсолютной позиции
+    height: 250,
   },
   imageStyle: {
     flex: 1,

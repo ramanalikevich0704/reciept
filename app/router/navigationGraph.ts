@@ -42,7 +42,7 @@ export const ALLOWED_TRANSITIONS: Record<
     AUTH_OK_FULL: "MAIN",
     AUTH_OK_NEED_PROFILE: "PROFILE",
   },
-  PROFILE: { DONE: "MAIN" },
+  PROFILE: { BACK: "LOGIN", DONE: "MAIN" },
   MAIN: { LOGOUT: "LOGIN" },
 };
 

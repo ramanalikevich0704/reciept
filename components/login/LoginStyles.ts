@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 
 export const Styles = StyleSheet.create({
   whiteText: { color: 'white'},
+  darkGrayText: { color: 'rgba(136, 148, 162, 1)'},
   greenText: { color: "rgba(52, 168, 83, 1)" },
   blackText: { color: 'black'},
   ordinaryStandardText: {
@@ -22,6 +23,11 @@ export const Styles = StyleSheet.create({
   },
   mediumCustomText: {
     fontSize: 18,
+    fontWeight: 400,
+    fontFamily: "Apercu Pro"
+  },
+  smallCustomText: {
+    fontSize: 12,
     fontWeight: 400,
     fontFamily: "Apercu Pro"
   },
@@ -46,6 +52,12 @@ export const Styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "white",
     backgroundColor: "rgba(244, 235, 235, 0.45)"
+  },
+  searchFieldForm: {
+    borderWidth: 1,
+    borderColor: "white",
+    backgroundColor: "white",
+    // color: 'background: rgba(136, 148, 162, 1)'
   },
   element: {
     height: 45,
@@ -147,3 +159,10 @@ export const fieldStyle = [
   Styles.ordinaryCustomText,
   Styles.fieldForm,
 ];
+
+export const searchInput = [
+  Styles.field,
+  Styles.element,
+  Styles.ordinaryCustomText,
+  Styles.searchFieldForm
+]

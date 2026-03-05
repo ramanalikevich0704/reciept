@@ -1,4 +1,9 @@
+import {
+  ALLOWED_TRANSITIONS,
+  SCREENS,
+} from "@/app/router/navigationGraph";
 import { AppBackground } from "@/components/AppBackground";
+import { BackButton } from "@/components/BackButton";
 import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
@@ -87,14 +92,17 @@ export default function ProfileView() {
   return (
     <AppBackground>
       <SafeAreaView style={Styles.safeArea}>
-          <TouchableOpacity
+          <BackButton
+            onPress={() => {
+              const next = ALLOWED_TRANSITIONS.PROFILE.BACK;
+              if (next) {
+                AuthService.logout().then(() =>
+                  router.replace(SCREENS[next])
+                );
+              }
+            }}
             style={styles.backButton}
-            onPress={() => router.back()}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-            activeOpacity={0.7}
-          >
-            <Icon name="chevron-back" size={28} color="white" />
-          </TouchableOpacity>
+          />
           <ScrollView
             style={styles.scroll}
             contentContainerStyle={styles.scrollContent}

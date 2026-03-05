@@ -1,4 +1,5 @@
 import { AppBackground } from "@/components/AppBackground";
+import { BackButton } from "@/components/BackButton";
 import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -72,14 +73,7 @@ export default function RegisterView() {
   return (
     <AppBackground>
       <SafeAreaView style={Styles.safeArea}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-            activeOpacity={0.7}
-          >
-            <Icon name="chevron-back" size={28} color="white" />
-          </TouchableOpacity>
+          <BackButton onPress={() => router.back()} style={styles.backButton} />
           <ScrollView
             style={styles.scroll}
             contentContainerStyle={styles.scrollContent}
@@ -230,7 +224,7 @@ export default function RegisterView() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({//нужно убрать отсюда
   backButton: {
     position: "absolute",
     top: 48,

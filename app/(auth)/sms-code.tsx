@@ -1,4 +1,5 @@
 import { AppBackground } from "@/components/AppBackground";
+import { BackButton } from "@/components/BackButton";
 import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
@@ -62,14 +63,7 @@ export default function SmsCodeView() {
   return (
     <AppBackground>
       <SafeAreaView style={Styles.safeArea}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-            activeOpacity={0.7}
-          >
-            <Icon name="chevron-back" size={28} color="white" />
-          </TouchableOpacity>
+          <BackButton onPress={() => router.back()} style={styles.backButton} />
           <View style={styles.content}>
             <View style={styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
