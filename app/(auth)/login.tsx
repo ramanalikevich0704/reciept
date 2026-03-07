@@ -1,22 +1,20 @@
+import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 
+import {
+  getEmailRules,
+  getPasswordRules,
+} from "@/app/(auth)/static/static-regex";
+import { AppBackground } from "@/components/AppBackground";
+import { FormError } from "@/components/FormError";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
+import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from "react-native-vector-icons/Ionicons";
 import * as yup from "yup";
-import { getEmailRules, getPasswordRules } from "@/app/(auth)/static/static-regex";
-import { AppBackground } from "@/components/AppBackground";
-import { FormError } from "@/components/FormError";
-import {
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
 
 interface LoginForm {
   email: string;
@@ -33,36 +31,82 @@ interface LoginForm {
 //use memo, use callback
 //custom hook
 //методы промиса!!!
+//пят типов функций
+// прото vs прототайп
+// Object.create
+// методы изменения массива
+// состояния Промиса
+// статические методы для объекдинения промисов all all seteled raise
+//spread vs rest спред копирует,
+// utility type
+//reconciliation
+//useEffect замменяет все методы ЖЦ, подписки, сайд эффекты, работа с таймерами
+// useLayout vs useEffect
+// useCallBack vs useMemo
+// React memo
+// shadow three yoga
+//Fabric turbo module CodeGen
+//Flash
+//virtual List
+// оптимизации списков RN
+// Context API vs Redux/Zustand
 
 //как происходит рендеринг компонентов
 // про дом в RN почитать
 
 // План：
 //Как сделать плавную анимацию?
-// Сделать количество попыток ввода пароля или смс?
-// Пофиксить навигацию на флоу авторизации
-// область видимости поля ввода в text input слишком узкое
 // адаптация экранов под все девайсе
+// Сделать количество попыток ввода пароля или смс?
+// профиль открывается тогда, когда не нужен
+// Пофиксить навигацию на флоу авторизации +(вроде все ок)
+// область видимости поля ввода в text input слишком узкое +(вроде все ок)
+// Проверить что все ошибки отображаются в качестве алертов
 // сделать детали рецепта
 // сделать логику популярные блюда
 // плохая навигация при старте и анимации переходов очень резки
 //  и иногда экран логина сначала видно, хотя должен быть сразу main screeen
+//Worklets
+//Какие бывают нативные модули?
+// глаз вью
+// structureClone
+// как определить что у объекта есть метод?
+// какие есть методы обхекта
+// методы массива
+// let изменяемая переменная
+// области видимости
+// виды функций
+// функциональные и классовые компоненты React
+// компонент vs элемент React
+// мемоизация
+// как передаются пропсы
+// методы ЖЦ компонента
+// Самоорганизованность необходима в компании
 
+// Ответы:
+// Примитивы: string, number, boolean, undefined, null, symbol, bigint
+// Виды функций:
+// Function Declaration(Поднимаются (hoisting), можно вызывать до объявления),
+// Function Expression(Функция — значение, её можно передавать, присваивать),
+// Arrow Function(Нет своего this (берётся из окружения), нет arguments, нельзя использовать как конструктор.)
+// Конструктор(инитит объект как функцию через this)
+// IIFE (сразу вызываемая функция)(Объявление и вызов в одном выражении, часто для изоляции области видимости.)
+// Генератор(Возвращает итератор, по шагам через yiel)
+// Async-функция(Всегда возвращает Promise, внутри можно использовать await.)
+
+// ES как собирать билды, колд пуш
+// FSD
+// reanimated
+// ЖЦ классовых и функциональных компонентов
 
 const loginSchema = yup.object({
   email: getEmailRules(),
-  password: getPasswordRules()
+  password: getPasswordRules(),
 });
 
 export default function LoginView() {
   const router = useRouter();
-  const { 
-    AuthService, 
-    showWebView, 
-    code, 
-    setCode,
-    setToken
-  } = useAuth();
+  const { AuthService } = useAuth();
   const {
     control,
     handleSubmit,
@@ -73,7 +117,7 @@ export default function LoginView() {
   });
 
   const login = (data: LoginForm) => {
-    AuthService.login(data.email, data.password)
+    AuthService.login(data.email, data.password);
   };
   const registerUser = () => {
     router.push("/(auth)/register");
@@ -84,8 +128,9 @@ export default function LoginView() {
   };
 
   return (
-    <AppBackground>
-      <SafeAreaView style={Styles.safeArea}>
+    <ScreenTransition>
+      <AppBackground>
+        <SafeAreaView style={Styles.safeArea}>
           <View style={{ marginTop: 44 }}>
             <View>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
@@ -102,9 +147,7 @@ export default function LoginView() {
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle,
-                      { marginBottom: 12 },
-                    ]}
+                    style={[...fieldStyle, { marginBottom: 12 }]}
                     placeholder={"Enter email"}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -166,7 +209,7 @@ export default function LoginView() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[Styles.socialNetworkButton, Styles.whitebutton]}
-                onPress={ AuthService.googleIn }
+                onPress={AuthService.googleIn}
               >
                 <Image
                   source={require("@/assets/images/google.png")}
@@ -194,7 +237,8 @@ export default function LoginView() {
               </Text>
             </TouchableOpacity>
           </View>
-      </SafeAreaView>
-    </AppBackground>
+        </SafeAreaView>
+      </AppBackground>
+    </ScreenTransition>
   );
 }

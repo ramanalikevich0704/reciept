@@ -4,6 +4,7 @@ import {
 } from "@/app/router/navigationGraph";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
 import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
@@ -90,8 +91,9 @@ export default function ProfileView() {
   };
 
   return (
-    <AppBackground>
-      <SafeAreaView style={Styles.safeArea}>
+    <ScreenTransition>
+      <AppBackground>
+        <SafeAreaView style={Styles.safeArea}>
           <BackButton
             onPress={() => {
               const next = ALLOWED_TRANSITIONS.PROFILE.BACK;
@@ -207,8 +209,9 @@ export default function ProfileView() {
               </TouchableOpacity>
             </View>
           </ScrollView>
-      </SafeAreaView>
-    </AppBackground>
+        </SafeAreaView>
+      </AppBackground>
+    </ScreenTransition>
   );
 }
 

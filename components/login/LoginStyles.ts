@@ -67,6 +67,11 @@ export const Styles = StyleSheet.create({
     padding: 18,
     borderWidth: 1,
   },
+  /** Меньше вертикальный padding, чтобы текст в поле высотой 45 не обрезался */
+  inputPadding: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+  },
   mainBackground: { 
     height: "100%",
     width: "100%",
@@ -158,6 +163,7 @@ export const fieldStyle = [
   Styles.element,
   Styles.ordinaryCustomText,
   Styles.fieldForm,
+  Styles.inputPadding,
 ];
 
 export const searchInput = [

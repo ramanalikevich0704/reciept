@@ -55,7 +55,13 @@ export default function AuthRouter() {
   if (!isColdStart) return; // add loader or splash
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        animation: "slide_from_right",
+        animationDuration: 320,
+      }}
+    >
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(main)" />
       <Stack.Screen name="(profile)" />

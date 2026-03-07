@@ -1,5 +1,6 @@
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
 import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
@@ -47,22 +48,25 @@ export default function SmsCodeView() {
 
   if (!confirmation) {
     return (
-      <AppBackground>
-        <SafeAreaView style={Styles.safeArea}>
+      <ScreenTransition>
+        <AppBackground>
+          <SafeAreaView style={Styles.safeArea}>
           <Text style={[Styles.whiteText, { padding: 20 }]}>
             Нет данных верификации. Вернитесь и отправьте код снова.
           </Text>
           <TouchableOpacity onPress={() => router.back()}>
             <Text style={Styles.whiteText}>Назад</Text>
           </TouchableOpacity>
-        </SafeAreaView>
-      </AppBackground>
+          </SafeAreaView>
+        </AppBackground>
+      </ScreenTransition>
     );
   }
 
   return (
-    <AppBackground>
-      <SafeAreaView style={Styles.safeArea}>
+    <ScreenTransition>
+      <AppBackground>
+        <SafeAreaView style={Styles.safeArea}>
           <BackButton onPress={() => router.back()} style={styles.backButton} />
           <View style={styles.content}>
             <View style={styles.header}>
@@ -114,8 +118,9 @@ export default function SmsCodeView() {
               </TouchableOpacity>
             </View>
           </View>
-      </SafeAreaView>
-    </AppBackground>
+        </SafeAreaView>
+      </AppBackground>
+    </ScreenTransition>
   );
 }
 

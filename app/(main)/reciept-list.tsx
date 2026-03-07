@@ -1,5 +1,6 @@
 import { recieptBackgroundImage } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
 import {
   searchInput,
   Styles
@@ -91,8 +92,14 @@ export default function MainView() {
     fetchRecipes,
   ]);
 
+  const openRecipeDetail = (recipeId: string) => {
+    router.push({ pathname: "/(main)/recipe-detail", params: { id: recipeId } });
+  };
+
   const renderItem = ({ item }: { item: RecipeRow }) => (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => openRecipeDetail(item.id)}
       style={[
         styles.item,
         styles.cellShadow,
@@ -122,20 +129,21 @@ export default function MainView() {
       >
         {item.title}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView
-      style={[
-        Styles.safeArea,
-        {
-          backgroundColor: "white",
-          // paddingHorizontal: 20,
-        },
-      ]}
-    >
-      <View style={{ flex: 1 }}>
+    <ScreenTransition>
+      <SafeAreaView
+        style={[
+          Styles.safeArea,
+          {
+            backgroundColor: "white",
+            // paddingHorizontal: 20,
+          },
+        ]}
+      >
+        <View style={{ flex: 1 }}>
         <View style={{ position: "relative" }}>
           <Image
             source={recieptBackgroundImage}
@@ -260,6 +268,7 @@ export default function MainView() {
         </View>
       </View>
     </SafeAreaView>
+    </ScreenTransition>
   );
 }
 

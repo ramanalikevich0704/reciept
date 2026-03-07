@@ -30,7 +30,7 @@ interface RAuthService {
 }
 
 const apiKey = "api-key";
-const apiToken = "46ec8567d8a3484895afb7d53572aa5c";
+const apiToken = '34400fd7a6e6482abdecf956c03d41f1'//"46ec8567d8a3484895afb7d53572aa5c";
 
 export const useAuth = () => {
   const confirmation = useAuthStore((s) => s.confirmation);

@@ -1,5 +1,6 @@
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
 import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
@@ -54,8 +55,9 @@ export default function PhoneInputView() {
   };
 
   return (
-    <AppBackground>
-      <SafeAreaView style={Styles.safeArea}>
+    <ScreenTransition>
+      <AppBackground>
+        <SafeAreaView style={Styles.safeArea}>
           <BackButton onPress={() => router.back()} style={styles.backButton} />
           <ScrollView
             style={styles.scroll}
@@ -101,8 +103,9 @@ export default function PhoneInputView() {
               </TouchableOpacity>
             </View>
           </ScrollView>
-      </SafeAreaView>
-    </AppBackground>
+        </SafeAreaView>
+      </AppBackground>
+    </ScreenTransition>
   );
 }
 

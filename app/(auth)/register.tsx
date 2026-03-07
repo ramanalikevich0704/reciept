@@ -1,5 +1,6 @@
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
 import { FormError } from "@/components/FormError";
 import { fieldStyle, Styles } from "@/components/login/LoginStyles";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -71,8 +72,9 @@ export default function RegisterView() {
   };
 
   return (
-    <AppBackground>
-      <SafeAreaView style={Styles.safeArea}>
+    <ScreenTransition>
+      <AppBackground>
+        <SafeAreaView style={Styles.safeArea}>
           <BackButton onPress={() => router.back()} style={styles.backButton} />
           <ScrollView
             style={styles.scroll}
@@ -219,8 +221,9 @@ export default function RegisterView() {
               </Text>
             </View>
           </ScrollView>
-      </SafeAreaView>
-    </AppBackground>
+        </SafeAreaView>
+      </AppBackground>
+    </ScreenTransition>
   );
 }
 

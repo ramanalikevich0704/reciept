@@ -1,5 +1,6 @@
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
 import { Styles } from "@/components/login/LoginStyles";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { useRouter } from "expo-router";
@@ -30,9 +31,10 @@ export default function ProfileView() {
   const { AuthService } = useAuth();
 
   return (
-    <AppBackground>
-      <SafeAreaView style={[Styles.safeArea, styles.safe]}>
-        <BackButton onPress={() => AuthService.logout()} />
+    <ScreenTransition>
+      <AppBackground>
+        <SafeAreaView style={[Styles.safeArea, styles.safe]}>
+          <BackButton onPress={() => AuthService.logout()} />
 
         {/* Шапка: приветствие слева, аватар справа */}
         <View style={styles.header}>
@@ -76,6 +78,7 @@ export default function ProfileView() {
               activeOpacity={0.85}
               onPress={() => {
                 if (item.id === "recipes") router.push("/(main)/reciept-list");
+                if (item.id === "popular") router.push("/(main)/popular-recipes");
               }}
             >
               <View style={styles.menuImageWrap}>
@@ -89,8 +92,9 @@ export default function ProfileView() {
             </TouchableOpacity>
           ))}
         </View>
-      </SafeAreaView>
-    </AppBackground>
+        </SafeAreaView>
+      </AppBackground>
+    </ScreenTransition>
   );
 }
 
