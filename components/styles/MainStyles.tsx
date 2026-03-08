@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/ColorConstants";
 import { StyleSheet } from "react-native";
 
 export const MainStyles = StyleSheet.create({
@@ -26,7 +27,7 @@ export const MainStyles = StyleSheet.create({
     height: 72,
     borderRadius: 36,
     overflow: "hidden",
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: Colors.WHITE_20,
   },
   avatarImage: {
     width: "100%",
@@ -54,7 +55,7 @@ export const MainStyles = StyleSheet.create({
     aspectRatio: 3 / 4,
     borderRadius: 16,
     overflow: "hidden",
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: Colors.WHITE_15,
   },
   menuImage: {
     width: "100%",
@@ -64,6 +65,6 @@ export const MainStyles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: Colors.WHITE,
   },
 });

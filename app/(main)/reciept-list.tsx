@@ -2,6 +2,7 @@ import { recieptBackgroundImage } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { searchInput, Styles } from "@/components/styles/LoginStyles";
+import { Colors } from "@/constants/ColorConstants";
 import {
   PLACEHOLDERS,
   RECIEPT_LIST_TEXT,
@@ -171,7 +172,7 @@ export default function RecipeListScreen() {
       </Text>
       {isPopular && (
         <View style={[RecipeStyles.cardHeartBadge, RecipeStyles.smallFavouriteButtonSize]} pointerEvents="none">
-          <Icon name="heart" size={21} color="#FF3B30" />
+          <Icon name="heart" size={21} color={Colors.HEART_ACTIVE} />
         </View>
       )}
     </TouchableOpacity>

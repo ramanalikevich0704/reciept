@@ -3,6 +3,7 @@ import { ScreenTransition } from "@/components/ScreenTransition";
 import { Styles } from "@/components/styles/LoginStyles";
 import { RecieptDetailsStyles } from "@/components/styles/RecieptDetailsStyles";
 import { RecipeStyles } from "@/components/styles/RecipeStyles";
+import { Colors } from "@/constants/ColorConstants";
 import { LABELS, RECIPE_DETAIL_TEXT } from "@/constants/constants";
 import {
   getRecipeInformation,
@@ -106,8 +107,8 @@ export default function RecipeDetailScreen() {
         >
           <BackButton
             onPress={() => router.back()}
-            iconColor="rgba(1, 2, 5, 1)"
-            backgroundColor="rgba(196, 196, 196, 1)"
+            iconColor={Colors.NEAR_BLACK}
+            backgroundColor={Colors.GRAY_BULLET}
           />
           <View style={[Styles.container, RecieptDetailsStyles.centered]}>
             <Text
@@ -158,8 +159,8 @@ export default function RecipeDetailScreen() {
               <View style={RecieptDetailsStyles.backButtonWrapper}>
                 <BackButton
                   onPress={() => router.back()}
-                  iconColor="rgba(1, 2, 5, 1)"
-                  backgroundColor="rgba(196, 196, 196, 1)"
+                  iconColor={Colors.NEAR_BLACK}
+                  backgroundColor={Colors.GRAY_BULLET}
                 />
               </View>
               <Text style={RecieptDetailsStyles.titleText}>{recipe.title}</Text>
@@ -196,7 +197,7 @@ export default function RecipeDetailScreen() {
                       <Icon
                         name="star"
                         size={starSize}
-                        color="rgba(180, 194, 211, 0.3)"
+                        color={Colors.STAR_EMPTY}
                       />
                       {fill > 0 && (
                         <View
@@ -209,7 +210,7 @@ export default function RecipeDetailScreen() {
                             overflow: "hidden",
                           }}
                         >
-                          <Icon name="star" size={starSize} color="#F99716" />
+                          <Icon name="star" size={starSize} color={Colors.STAR_FILLED} />
                         </View>
                       )}
                     </View>
@@ -228,7 +229,7 @@ export default function RecipeDetailScreen() {
               <Icon
                 name={isFavorite ? "heart" : "heart-outline"}
                 size={26}
-                color={isFavorite ? "#FF3B30" : "rgba(180, 194, 211, 1)"}
+                color={isFavorite ? Colors.HEART_ACTIVE : Colors.SLATE_TEXT}
               />
             </TouchableOpacity>
           </View>

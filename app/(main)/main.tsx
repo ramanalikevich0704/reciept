@@ -3,6 +3,7 @@ import { BackButton } from "@/components/BackButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { Styles } from "@/components/styles/LoginStyles";
 import { MainStyles } from "@/components/styles/MainStyles";
+import { Colors } from "@/constants/ColorConstants";
 import { LABELS, MAIN_TEXT } from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
@@ -68,7 +69,7 @@ export default function ProfileView() {
                 />
               ) : (
                 <View style={MainStyles.avatarPlaceholder}>
-                  <Icon name="person" size={40} color="rgba(255,255,255,0.9)" />
+                  <Icon name="person" size={40} color={Colors.WHITE_90} />
                 </View>
               )}
             </TouchableOpacity>

@@ -1,7 +1,8 @@
+import { Colors } from "@/constants/ColorConstants";
 import { StyleSheet } from "react-native";
 
 export const RecipeStyles = StyleSheet.create({
-  safe: { backgroundColor: "white" },
+  safe: { backgroundColor: Colors.WHITE },
   headerImageWrap: { position: "relative" },
   headerImage: { width: "100%", borderRadius: 10 },
   headerOverlay: {
@@ -18,7 +19,7 @@ export const RecipeStyles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 40,
     marginTop: 12,
-    backgroundColor: "white",
+    backgroundColor: Colors.WHITE,
     borderRadius: 10,
   },
   searchInputWithIcon: {
@@ -34,15 +35,15 @@ export const RecipeStyles = StyleSheet.create({
     marginTop: -25,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    backgroundColor: "white",
+    backgroundColor: Colors.WHITE,
   },
   list: { paddingTop: 15 },
   listContent: { paddingBottom: 24, flexGrow: 1 },
   listHeader: { marginBottom: 16 },
   countText: {
-    color: "rgba(136, 148, 162, 1)",
+    color: Colors.MUTED_TEXT,
     borderWidth: 0.5,
-    borderColor: "rgba(180, 194, 211, 1)",
+    borderColor: Colors.SLATE_TEXT,
     borderRadius: 12,
     padding: 10,
     alignSelf: "flex-start",
@@ -56,8 +57,8 @@ export const RecipeStyles = StyleSheet.create({
     gap: 15,
     borderRadius: 10,
     borderWidth: 0.5,
-    borderColor: "rgba(180, 194, 211, 0.2)",
-    backgroundColor: "white",
+    borderColor: Colors.SLATE_BORDER,
+    backgroundColor: Colors.WHITE,
   },
   cardImage: { width: 48, height: 48, borderRadius: 10 },
   cardTitle: { flex: 1, flexShrink: 1 },
@@ -70,7 +71,6 @@ export const RecipeStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  /** Иконка сердца в карточке списка: поверх контента, правый нижний угол */
   cardHeartBadge: {
     position: "absolute",
     right: 8,
@@ -78,14 +78,14 @@ export const RecipeStyles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: "rgba(242, 244, 247, 1)",
+    backgroundColor: Colors.CARD_BG,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 1,
     elevation: 2,
   },
   cellShadow: {
-    shadowColor: "#000",
+    shadowColor: Colors.SHADOW,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.08,
     shadowRadius: 10,
@@ -93,21 +93,21 @@ export const RecipeStyles = StyleSheet.create({
   },
   favoriteButton: {
     borderRadius: 25,
-    backgroundColor: "rgba(242, 244, 247, 1)",
+    backgroundColor: Colors.CARD_BG,
     justifyContent: "center",
     alignItems: "center",
     marginLeft: 16,
   },
   bigFavouriteButtonSize: {
     width: 52,
-    height: 52
+    height: 52,
   },
   smallFavouriteButtonSize: {
     width: 26,
-    height: 26
+    height: 26,
   },
   centered: { justifyContent: "center", alignItems: "center", gap: 12 },
-  loadingText: { color: "rgba(136, 148, 162, 1)" },
+  loadingText: { color: Colors.MUTED_TEXT },
   emptyWrap: { justifyContent: "center", paddingVertical: 48 },
-  emptyText: { color: "rgba(136, 148, 162, 1)", textAlign: "center" as const },
+  emptyText: { color: Colors.MUTED_TEXT, textAlign: "center" as const },
 });

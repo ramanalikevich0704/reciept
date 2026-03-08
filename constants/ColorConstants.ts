@@ -1,0 +1,35 @@
+/**
+ * Уникальные цвета приложения. Каждое значение задано один раз.
+ */
+
+export const Colors = {
+  WHITE: "#ffffff",
+  BLACK: "#000000",
+  TITLE_DARK: "#1a1a1a",
+  NEAR_BLACK: "rgba(1, 2, 5, 1)",
+  GRAY_80: "rgba(80, 80, 80, 1)",
+  GRAY_BULLET: "rgba(196, 196, 196, 1)",
+  MUTED_TEXT: "rgba(136, 148, 162, 1)",
+  SLATE_TEXT: "rgba(180, 194, 211, 1)",
+  SLATE_BORDER: "rgba(180, 194, 211, 0.2)",
+  STAR_EMPTY: "rgba(180, 194, 211, 0.3)",
+  GREEN_PRIMARY: "rgba(52, 168, 83, 1)",
+  GREEN_TINT: "rgba(52, 168, 83, 0.12)",
+  STAR_FILLED: "#F99716",
+  HEART_ACTIVE: "#FF3B30",
+  ERROR_RED: "#c00",
+  ERROR_BG: "rgba(237, 7, 7, 0.5)",
+  BUTTON_DISABLED: "#A9A9A9",
+  DISABLED_TEXT: "rgba(74, 5, 5, 0.45)",
+  FIELD_BG: "rgba(244, 235, 235, 0.45)",
+  BLUE_SOCIAL: "rgba(59, 89, 153, 1)",
+  CARD_BG: "rgba(242, 244, 247, 1)",
+  PLACEHOLDER_BG: "#eee",
+  WHITE_20: "rgba(255, 255, 255, 0.2)",
+  WHITE_15: "rgba(255, 255, 255, 0.15)",
+  WHITE_90: "rgba(255, 255, 255, 0.9)",
+  OVERLAY_DARK: "rgba(25, 25, 25, 0.4)",
+  IMAGE_OVERLAY: "rgba(156, 148, 148, 0.5)",
+  CAPTCHA_OVERLAY: "rgba(0, 0, 0, 0.5)",
+  SHADOW: "#000",
+} as const;

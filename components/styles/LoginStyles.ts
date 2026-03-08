@@ -1,13 +1,13 @@
-import { Background } from "@react-navigation/elements";
+import { Colors } from "@/constants/ColorConstants";
 import { StyleSheet } from "react-native";
 
 const PADDING_HORIZONTAL = 20;
 
 export const Styles = StyleSheet.create({
-  whiteText: { color: 'white'},
-  darkGrayText: { color: 'rgba(136, 148, 162, 1)'},
-  greenText: { color: "rgba(52, 168, 83, 1)" },
-  blackText: { color: 'black'},
+  whiteText: { color: Colors.WHITE },
+  darkGrayText: { color: Colors.MUTED_TEXT },
+  greenText: { color: Colors.GREEN_PRIMARY },
+  blackText: { color: Colors.BLACK },
   ordinaryStandardText: {
     fontSize: 14,
     fontWeight: 400,
@@ -43,23 +43,22 @@ export const Styles = StyleSheet.create({
     fontFamily: "Apercu Pro"
   },
   errorText: {
-    color: "white",
+    color: Colors.WHITE,
     fontSize: 12,
     fontWeight: "bold",
-    backgroundColor: "rgba(237, 7, 7, 0.5)",
+    backgroundColor: Colors.ERROR_BG,
     borderRadius: 8,
     paddingHorizontal: 18,
   },
   fieldForm: {
     borderWidth: 1,
-    borderColor: "white",
-    backgroundColor: "rgba(244, 235, 235, 0.45)"
+    borderColor: Colors.WHITE,
+    backgroundColor: Colors.FIELD_BG,
   },
   searchFieldForm: {
     borderWidth: 1,
-    borderColor: "white",
-    backgroundColor: "white",
-    // color: 'background: rgba(136, 148, 162, 1)'
+    borderColor: Colors.WHITE,
+    backgroundColor: Colors.WHITE,
   },
   element: {
     height: 45,
@@ -74,21 +73,21 @@ export const Styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 18,
   },
-  mainBackground: { 
+  mainBackground: {
     height: "100%",
     width: "100%",
-    backgroundColor: "black" 
+    backgroundColor: Colors.BLACK,
   },
   imageBackgroundImageStyle: {
     flex: 1,
-    backgroundColor: "rgba(156, 148, 148, 0.5)"
+    backgroundColor: Colors.IMAGE_OVERLAY,
   },
   imageBackgroundStyle: {
-    flex: 1, // Растягивает на весь экран
+    flex: 1,
     paddingHorizontal: PADDING_HORIZONTAL,
   },
   blurColor: {
-    backgroundColor: "rgba(25,25,25,0.4)" 
+    backgroundColor: Colors.OVERLAY_DARK,
   },
   container: {
     flex: 1,
@@ -124,19 +123,19 @@ export const Styles = StyleSheet.create({
   },
   //
   button: {
-    color: "rgba(52, 168, 83, 1)",
-    backgroundColor: "white",
+    color: Colors.GREEN_PRIMARY,
+    backgroundColor: Colors.WHITE,
   },
   buttonDisabled: {
-    backgroundColor: "#A9A9A9", // Серый для неактивной
+    backgroundColor: Colors.BUTTON_DISABLED,
     opacity: 0.7,
-    color: "white",
+    color: Colors.WHITE,
   },
   registerButton: {
-    backgroundColor: "rgba(52, 168, 83, 1)",
+    backgroundColor: Colors.GREEN_PRIMARY,
   },
   disableButtonText: {
-    color: "rgba(74, 5, 5, 0.45)",
+    color: Colors.DISABLED_TEXT,
     fontSize: 18,
     fontFamily: "Apercu Pro",
   },
@@ -145,15 +144,15 @@ export const Styles = StyleSheet.create({
     fontFamily: "Apercu Pro",
     fontWeight: 700,
     textDecorationLine: "underline",
-    color: "white",
+    color: Colors.WHITE,
     textAlign: "right",
     paddingBottom: 18,
   },
-   loginwith: {
+  loginwith: {
     fontSize: 14,
     fontFamily: "Apercu Pro",
     fontWeight: 700,
-    color: "white",
+    color: Colors.WHITE,
     textAlign: "center",
     paddingBottom: 18,
     paddingVertical: 12,
@@ -164,11 +163,11 @@ export const Styles = StyleSheet.create({
     marginRight: 8,
   },
   bluebutton: {
-    backgroundColor: "rgba(59, 89, 153, 1)",
+    backgroundColor: Colors.BLUE_SOCIAL,
     borderRadius: 10,
   },
   whitebutton: {
-    backgroundColor: "white",
+    backgroundColor: Colors.WHITE,
     borderRadius: 10,
   },
   socialNetworkButton: {

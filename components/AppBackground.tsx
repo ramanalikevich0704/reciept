@@ -1,4 +1,5 @@
 import { Styles } from "@/components/styles/LoginStyles";
+import { Colors } from "@/constants/ColorConstants";
 import React from "react";
 import {
   ImageBackground,
@@ -16,7 +17,7 @@ export const styles = StyleSheet.create({
   root: {
     height: "100%",
     width: "100%",
-    backgroundColor: "black",
+    backgroundColor: Colors.BLACK,
   },
   image: {
     flex: 1,
@@ -27,16 +28,16 @@ export const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    width: "100%", // Обязательно для абсолютной позиции
+    width: "100%",
     height: 250,
   },
   imageStyle: {
     flex: 1,
-    backgroundColor: "rgba(156, 148, 148, 0.5)",
+    backgroundColor: Colors.IMAGE_OVERLAY,
   },
   blur: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(25,25,25,0.4)",
+    backgroundColor: Colors.OVERLAY_DARK,
   },
 });
 

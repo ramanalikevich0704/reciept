@@ -1,8 +1,9 @@
+import { Colors } from "@/constants/ColorConstants";
 import { StyleSheet } from "react-native";
 
 export const RecieptDetailsStyles = StyleSheet.create({
   safe: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.WHITE,
   },
   centered: {
     justifyContent: "center",
@@ -11,10 +12,10 @@ export const RecieptDetailsStyles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 12,
-    color: "rgba(136, 148, 162, 1)",
+    color: Colors.MUTED_TEXT,
   },
   errorText: {
-    color: "#c00",
+    color: Colors.ERROR_RED,
     textAlign: "center",
   },
   headerContainer: {
@@ -35,7 +36,7 @@ export const RecieptDetailsStyles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 31,
     letterSpacing: 0.28,
-    color: "#1a1a1a",
+    color: Colors.TITLE_DARK,
   },
   authorText: {
     marginTop: 4,
@@ -46,10 +47,10 @@ export const RecieptDetailsStyles = StyleSheet.create({
     letterSpacing: 0.08,
   },
   authorPrefix: {
-    color: "rgba(180, 194, 211, 1)",
+    color: Colors.SLATE_TEXT,
   },
   authorName: {
-    color: "rgba(52, 168, 83, 1)",
+    color: Colors.GREEN_PRIMARY,
   },
   ratingRow: {
     flexDirection: "row",
@@ -67,7 +68,7 @@ export const RecieptDetailsStyles = StyleSheet.create({
   heroImage: {
     width: "100%",
     height: 260,
-    backgroundColor: "#eee",
+    backgroundColor: Colors.PLACEHOLDER_BG,
     borderRadius: 10,
   },
   content: {
@@ -79,19 +80,19 @@ export const RecieptDetailsStyles = StyleSheet.create({
     marginBottom: 20,
   },
   badge: {
-    backgroundColor: "rgba(52, 168, 83, 0.12)",
+    backgroundColor: Colors.GREEN_TINT,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
   },
   badgeText: {
-    color: "rgba(52, 168, 83, 1)",
+    color: Colors.GREEN_PRIMARY,
   },
   section: {
     marginBottom: 24,
   },
   sectionTitle: {
-    color: "#1a1a1a",
+    color: Colors.TITLE_DARK,
     marginBottom: 10,
   },
   ingredientsSectionTitle: {
@@ -100,7 +101,7 @@ export const RecieptDetailsStyles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 31,
     letterSpacing: 0.14,
-    color: "rgba(1, 2, 5, 1)",
+    color: Colors.NEAR_BLACK,
     marginBottom: 10,
   },
   summaryText: {
@@ -109,10 +110,10 @@ export const RecieptDetailsStyles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
     letterSpacing: 0.08,
-    color: "rgba(80, 80, 80, 1)",
+    color: Colors.GRAY_80,
   },
   bodyText: {
-    color: "rgba(180, 194, 211, 1)",
+    color: Colors.SLATE_TEXT,
     lineHeight: 22,
   },
   ingredientRow: {
@@ -125,7 +126,7 @@ export const RecieptDetailsStyles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "rgba(196, 196, 196, 1)",
+    backgroundColor: Colors.GRAY_BULLET,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -133,8 +134,8 @@ export const RecieptDetailsStyles = StyleSheet.create({
     fontFamily: "Apercu Pro",
     fontWeight: "400",
     fontSize: 11,
-    backgroundColor: "rgba(196, 196, 196, 1)",
-    color: "rgba(1, 2, 5, 1)",
+    backgroundColor: Colors.GRAY_BULLET,
+    color: Colors.NEAR_BLACK,
   },
   ingredientText: {
     flex: 1,
@@ -143,7 +144,7 @@ export const RecieptDetailsStyles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
     letterSpacing: 0.08,
-    color: "rgba(180, 194, 211, 1)",
+    color: Colors.SLATE_TEXT,
   },
   stepRow: {
     flexDirection: "row",
@@ -155,17 +156,17 @@ export const RecieptDetailsStyles = StyleSheet.create({
     width: 26,
     height: 26,
     borderRadius: 13,
-    backgroundColor: "rgba(52, 168, 83, 1)",
+    backgroundColor: Colors.GREEN_PRIMARY,
     justifyContent: "center",
     alignItems: "center",
   },
   stepNumberText: {
-    color: "#fff",
+    color: Colors.WHITE,
     fontWeight: "700",
   },
   stepText: {
     flex: 1,
-    color: "rgba(180, 194, 211, 1)",
+    color: Colors.SLATE_TEXT,
     lineHeight: 22,
   },
 });

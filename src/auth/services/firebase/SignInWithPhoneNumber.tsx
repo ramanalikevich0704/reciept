@@ -1,11 +1,11 @@
 import {
   FirebaseAuthTypes
 } from "@react-native-firebase/auth";
+import { Colors } from "@/constants/ColorConstants";
 import { authInstance } from "@/src/auth/services/firebase/FirebaseConfiguration";
 import { WebView } from "react-native-webview";
 import firestore from "@react-native-firebase/firestore";
 import { Alert, View } from "react-native";
-//import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Dispatch, SetStateAction } from "react";
 
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   webViewContainer: {
     flex: 1, // Растянуть на весь экран
     zIndex: 999, // Поверх всех элементов
-    backgroundColor: "rgba(0,0,0,0.5)", // Полупрозрачный фон для капчи
+    backgroundColor: Colors.CAPTCHA_OVERLAY,
   },
   hidden: {
     height: 0,
