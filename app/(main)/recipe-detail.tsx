@@ -268,7 +268,7 @@ export default function RecipeDetailScreen() {
                 </Text>
                 {recipe.extendedIngredients.map((ing, idx) => (
                   <View
-                    key={ing.id ?? idx}
+                    key={`ing-${idx}`}
                     style={RecieptDetailsStyles.ingredientRow}
                   >
                     <View style={RecieptDetailsStyles.ingredientBullet}>

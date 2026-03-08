@@ -170,7 +170,7 @@ export default function RecipeListScreen() {
         {item.title}
       </Text>
       {isPopular && (
-        <View style={RecipeStyles.cardHeartBadge} pointerEvents="none">
+        <View style={[RecipeStyles.cardHeartBadge, RecipeStyles.smallFavouriteButtonSize]} pointerEvents="none">
           <Icon name="heart" size={21} color="#FF3B30" />
         </View>
       )}
