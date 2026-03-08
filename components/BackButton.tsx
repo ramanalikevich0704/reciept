@@ -2,38 +2,38 @@ import { Styles } from "@/components/styles/LoginStyles";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
-type BackButtonProps = {
+export interface BackButtonProps {
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
   iconColor?: string;
   backgroundColor?: string;
-};
+  iconSize?: number;
+}
+
+const DEFAULT_ICON_COLOR = "white";
+const DEFAULT_ICON_SIZE = 28;
+const HIT_SLOP = { top: 12, bottom: 12, left: 12, right: 12 };
 
 export function BackButton({
   onPress,
   style,
-  iconColor = "white",
+  iconColor = DEFAULT_ICON_COLOR,
   backgroundColor,
+  iconSize = DEFAULT_ICON_SIZE,
 }: BackButtonProps) {
   return (
     <TouchableOpacity
       style={[
         Styles.fieldForm,
-        {
-          // width: 40,
-          // height: 40,
-          borderRadius: 25,
-          // justifyContent: "center",
-          // alignItems: "center",
-        },
+        { borderRadius: 25 },
         backgroundColor !== undefined && { backgroundColor },
         style,
       ]}
       onPress={onPress}
-      hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+      hitSlop={HIT_SLOP}
       activeOpacity={0.7}
     >
-      <Icon name="chevron-back" size={28} color={iconColor} />
+      <Icon name="chevron-back" size={iconSize} color={iconColor} />
     </TouchableOpacity>
   );
 }
