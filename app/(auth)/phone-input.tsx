@@ -1,35 +1,25 @@
-import { AppBackground } from "@/components/AppBackground";
-import { BackButton } from "@/components/BackButton";
-import { ScreenTransition } from "@/components/ScreenTransition";
-import { FormError } from "@/components/FormError";
-import { fieldStyle, Styles } from "@/components/login/LoginStyles";
-import { useAuth } from "@/src/auth/services/AuthService";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import Icon from "react-native-vector-icons/Ionicons";
 import { formatPhoneMask } from "@/app/(auth)/static/static";
 import { getPhoneNumberRules } from "@/app/(auth)/static/static-regex";
+import { AppBackground } from "@/components/AppBackground";
+import { BackButton } from "@/components/BackButton";
+import { FormError } from "@/components/FormError";
+import { ScreenTransition } from "@/components/ScreenTransition";
+import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
+import { useAuth } from "@/src/auth/services/AuthService";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as yup from "yup";
 
 interface PhoneForm {
   phonenumber: string;
 }
 
 const phoneSchema = yup.object({
-  phonenumber: getPhoneNumberRules()
+  phonenumber: getPhoneNumberRules(),
 });
-
-
 
 export default function PhoneInputView() {
   const router = useRouter();
@@ -38,11 +28,14 @@ export default function PhoneInputView() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<PhoneForm>({
     mode: "onChange",
     resolver: yupResolver(phoneSchema),
   });
+
+  const phonenumberValue = watch("phonenumber");
 
   const onSendCode = (data: PhoneForm) => {
     AuthService.signInWithPhoneNumber(data.phonenumber)
@@ -58,14 +51,9 @@ export default function PhoneInputView() {
     <ScreenTransition>
       <AppBackground>
         <SafeAreaView style={Styles.safeArea}>
-          <BackButton onPress={() => router.back()} style={styles.backButton} />
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.header}>
+          <BackButton onPress={() => router.back()} style={Styles.backButton} />
+          <View style={[Styles.container, Styles.scrollContent]}>
+            <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
                 Вход по номеру телефона
               </Text>
@@ -74,12 +62,12 @@ export default function PhoneInputView() {
               </Text>
             </View>
 
-            <View style={styles.form}>
+            <View style={Styles.form}>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="+375 (44) 516-80-98"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -91,7 +79,13 @@ export default function PhoneInputView() {
                 )}
                 name="phonenumber"
               />
-              <FormError message={errors.phonenumber?.message} />
+              <FormError
+                message={
+                  (phonenumberValue?.trim() ?? "") !== ""
+                    ? errors.phonenumber?.message
+                    : undefined
+                }
+              />
 
               <TouchableOpacity
                 style={[Styles.button, Styles.centerPosition, Styles.element]}
@@ -102,25 +96,9 @@ export default function PhoneInputView() {
                 </Text>
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </View>
         </SafeAreaView>
       </AppBackground>
     </ScreenTransition>
   );
 }
-
-const styles = StyleSheet.create({
-  backButton: {
-    position: "absolute",
-    top: 48,
-    left: 8,
-    zIndex: 10,
-    padding: 8,
-    marginLeft: 4,
-  },
-  scroll: { flex: 1 },
-  scrollContent: { paddingBottom: 40 },
-  header: { marginTop: 44, marginBottom: 24 },
-  form: { marginBottom: 24 },
-  input: { marginBottom: 12 },
-});

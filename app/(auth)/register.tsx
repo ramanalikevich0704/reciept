@@ -1,31 +1,30 @@
-import { AppBackground } from "@/components/AppBackground";
-import { BackButton } from "@/components/BackButton";
-import { ScreenTransition } from "@/components/ScreenTransition";
-import { FormError } from "@/components/FormError";
-import { fieldStyle, Styles } from "@/components/login/LoginStyles";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "@/src/auth/services/AuthService";
-import * as yup from "yup";
-import { Controller, useForm } from "react-hook-form";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import Icon from "react-native-vector-icons/Ionicons";
 import { formatPhoneMask } from "@/app/(auth)/static/static";
-import { 
+import {
   getConfirmPasswordRules,
   getEmailRules,
   getNameRules,
-  getPasswordRules, 
-  getPhoneNumberRules, 
-  getSurnameRules } from "@/app/(auth)/static/static-regex";
+  getPasswordRules,
+  getPhoneNumberRules,
+  getSurnameRules,
+} from "@/app/(auth)/static/static-regex";
+import { AdaptiveContainer } from "@/components/AdaptiveContainer";
+import { AppBackground } from "@/components/AppBackground";
+import { BackButton } from "@/components/BackButton";
+import { FormError } from "@/components/FormError";
+import { ScreenTransition } from "@/components/ScreenTransition";
+import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
+import { useAuth } from "@/src/auth/services/AuthService";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as yup from "yup";
 
 interface RegisterForm {
   email: string;
@@ -51,6 +50,7 @@ export default function RegisterView() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { isValid, errors },
   } = useForm<RegisterForm>({
     mode: "onChange",
@@ -58,16 +58,23 @@ export default function RegisterView() {
   });
   const { AuthService } = useAuth();
 
+  const emailValue = watch("email");
+  const nameValue = watch("name");
+  const surnameValue = watch("surname");
+  const phonenumberValue = watch("phonenumber");
+  const passwordValue = watch("password");
+  const confirmPasswordValue = watch("confirmPassword");
+
   const onRegister = (data: RegisterForm) => {
     AuthService.register(
       {
-        uid: null,//нужно ли здесь генерить?
+        uid: null, //нужно ли здесь генерить?
         email: data.email,
         firstName: data.name,
         surname: data.surname,
         phoneNumber: data.phonenumber,
       },
-      data.password
+      data.password,
     );
   };
 
@@ -75,14 +82,13 @@ export default function RegisterView() {
     <ScreenTransition>
       <AppBackground>
         <SafeAreaView style={Styles.safeArea}>
-          <BackButton onPress={() => router.back()} style={styles.backButton} />
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
+          <BackButton onPress={() => router.back()} style={Styles.backButton} />
+          <AdaptiveContainer
+            style={Styles.container}
+            contentContainerStyle={Styles.scrollContent}
+            scrollViewProps={{ keyboardShouldPersistTaps: "handled" }}
           >
-            <View style={styles.header}>
+            <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
                 Create account
               </Text>
@@ -91,12 +97,12 @@ export default function RegisterView() {
               </Text>
             </View>
 
-            <View style={styles.form}>
+            <View style={Styles.form}>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Введите email"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -108,13 +114,19 @@ export default function RegisterView() {
                 )}
                 name="email"
               />
-              <FormError message={errors.email?.message} />
+              <FormError
+                message={
+                  (emailValue?.trim() ?? "") !== ""
+                    ? errors.email?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Введите имя"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -125,13 +137,19 @@ export default function RegisterView() {
                 )}
                 name="name"
               />
-              <FormError message={errors.name?.message} />
+              <FormError
+                message={
+                  (nameValue?.trim() ?? "") !== ""
+                    ? errors.name?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Введите фамилию"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -142,13 +160,19 @@ export default function RegisterView() {
                 )}
                 name="surname"
               />
-              <FormError message={errors.surname?.message} />
+              <FormError
+                message={
+                  (surnameValue?.trim() ?? "") !== ""
+                    ? errors.surname?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="+375 (44) 516-80-98"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -160,13 +184,19 @@ export default function RegisterView() {
                 )}
                 name="phonenumber"
               />
-              <FormError message={errors.phonenumber?.message} />
+              <FormError
+                message={
+                  (phonenumberValue?.trim() ?? "") !== ""
+                    ? errors.phonenumber?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Введите пароль"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -177,13 +207,19 @@ export default function RegisterView() {
                 )}
                 name="password"
               />
-              <FormError message={errors.password?.message} />
+              <FormError
+                message={
+                  (passwordValue?.trim() ?? "") !== ""
+                    ? errors.password?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Подтвердите пароль"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -194,7 +230,13 @@ export default function RegisterView() {
                 )}
                 name="confirmPassword"
               />
-              <FormError message={errors.confirmPassword?.message} />
+              <FormError
+                message={
+                  (confirmPasswordValue?.trim() ?? "") !== ""
+                    ? errors.confirmPassword?.message
+                    : undefined
+                }
+              />
 
               <TouchableOpacity
                 style={[
@@ -207,47 +249,28 @@ export default function RegisterView() {
                 onPress={handleSubmit(onRegister)}
               >
                 <Text
-                  style={[Styles.greenText, isValid && Styles.disableButtonText]}
+                  style={[
+                    Styles.greenText,
+                    isValid && Styles.disableButtonText,
+                  ]}
                 >
                   Зарегистрироваться
                 </Text>
               </TouchableOpacity>
 
               <Text
-                style={[Styles.forgetPassword, { textAlign: "center", paddingTop: 16 }]}
+                style={[
+                  Styles.forgetPassword,
+                  { textAlign: "center", paddingTop: 16 },
+                ]}
                 onPress={() => router.back()}
               >
                 Уже есть аккаунт? Войти
               </Text>
             </View>
-          </ScrollView>
+          </AdaptiveContainer>
         </SafeAreaView>
       </AppBackground>
     </ScreenTransition>
   );
 }
-
-const styles = StyleSheet.create({//нужно убрать отсюда
-  backButton: {
-    position: "absolute",
-    top: 48,
-    left: 8,
-    zIndex: 10,
-    padding: 8,
-    marginLeft: 4,
-  },
-  scroll: { flex: 1 },
-  scrollContent: {
-    paddingBottom: 40,
-  },
-  header: {
-    marginTop: 44,
-    marginBottom: 24,
-  },
-  form: {
-    marginBottom: 24,
-  },
-  input: {
-    marginBottom: 12,
-  },
-});

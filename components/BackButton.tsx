@@ -1,6 +1,5 @@
-import { Styles } from "@/components/login/LoginStyles";
-import { StyleProp, ViewStyle } from "react-native";
-import { TouchableOpacity } from "react-native";
+import { Styles } from "@/components/styles/LoginStyles";
+import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 type BackButtonProps = {
@@ -21,11 +20,11 @@ export function BackButton({
       style={[
         Styles.fieldForm,
         {
-          width: 40,
-          height: 40,
+          // width: 40,
+          // height: 40,
           borderRadius: 25,
-          justifyContent: "center",
-          alignItems: "center",
+          // justifyContent: "center",
+          // alignItems: "center",
         },
         backgroundColor !== undefined && { backgroundColor },
         style,

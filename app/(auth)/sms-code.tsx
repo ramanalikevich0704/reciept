@@ -1,11 +1,12 @@
+import { SMS_CODE_LENGTH } from "@/app/(auth)/static/static";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
-import { ScreenTransition } from "@/components/ScreenTransition";
 import { FormError } from "@/components/FormError";
-import { fieldStyle, Styles } from "@/components/login/LoginStyles";
+import { ScreenTransition } from "@/components/ScreenTransition";
+import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import {
   StyleSheet,
@@ -15,17 +16,15 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import Icon from "react-native-vector-icons/Ionicons";
+import * as yup from "yup";
 import { getSmsRules } from "./static/static-regex";
-import { SMS_CODE_LENGTH } from "@/app/(auth)/static/static";
 
 interface SmsCodeForm {
   code: string;
 }
 
 const smsCodeSchema = yup.object({
-  code: getSmsRules()
+  code: getSmsRules(),
 });
 
 export default function SmsCodeView() {
@@ -35,12 +34,15 @@ export default function SmsCodeView() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { isValid, errors },
   } = useForm<SmsCodeForm>({
     mode: "onChange",
     resolver: yupResolver(smsCodeSchema),
     defaultValues: { code: "" },
   });
+
+  const codeValue = watch("code");
 
   const onConfirm = (data: SmsCodeForm) => {
     AuthService.confirmCode(data.code);
@@ -51,12 +53,12 @@ export default function SmsCodeView() {
       <ScreenTransition>
         <AppBackground>
           <SafeAreaView style={Styles.safeArea}>
-          <Text style={[Styles.whiteText, { padding: 20 }]}>
-            Нет данных верификации. Вернитесь и отправьте код снова.
-          </Text>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text style={Styles.whiteText}>Назад</Text>
-          </TouchableOpacity>
+            <Text style={[Styles.whiteText, { padding: 20 }]}>
+              Нет данных верификации. Вернитесь и отправьте код снова.
+            </Text>
+            <TouchableOpacity onPress={() => router.back()}>
+              <Text style={Styles.whiteText}>Назад</Text>
+            </TouchableOpacity>
           </SafeAreaView>
         </AppBackground>
       </ScreenTransition>
@@ -67,9 +69,11 @@ export default function SmsCodeView() {
     <ScreenTransition>
       <AppBackground>
         <SafeAreaView style={Styles.safeArea}>
-          <BackButton onPress={() => router.back()} style={styles.backButton} />
-          <View style={styles.content}>
-            <View style={styles.header}>
+          <BackButton onPress={() => router.back()} style={Styles.backButton} />
+          <View
+            style={[Styles.container, Styles.contentPadding, styles.content]}
+          >
+            <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
                 Введите код из SMS
               </Text>
@@ -78,12 +82,12 @@ export default function SmsCodeView() {
               </Text>
             </View>
 
-            <View style={styles.form}>
+            <View style={Styles.form}>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="123456"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -95,7 +99,13 @@ export default function SmsCodeView() {
                 )}
                 name="code"
               />
-              <FormError message={errors.code?.message} />
+              <FormError
+                message={
+                  (codeValue?.trim() ?? "") !== ""
+                    ? errors.code?.message
+                    : undefined
+                }
+              />
 
               <TouchableOpacity
                 style={[
@@ -125,16 +135,5 @@ export default function SmsCodeView() {
 }
 
 const styles = StyleSheet.create({
-  backButton: {
-    position: "absolute",
-    top: 48,
-    left: 8,
-    zIndex: 10,
-    padding: 8,
-    marginLeft: 4,
-  },
-  content: { flex: 1, paddingHorizontal: 20, paddingTop: 44 },
-  header: { marginBottom: 24 },
-  form: { marginBottom: 24 },
-  input: { marginBottom: 12 },
+  content: { paddingTop: 44 },
 });

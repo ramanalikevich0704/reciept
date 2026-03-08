@@ -1,3 +1,4 @@
+import { Styles } from "@/components/styles/LoginStyles";
 import React from "react";
 import {
   ImageBackground,
@@ -19,14 +20,14 @@ export const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    paddingHorizontal: 20,
+    ...Styles.contentPadding,
   },
   recieptImage: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
-    width: '100%', // Обязательно для абсолютной позиции
+    width: "100%", // Обязательно для абсолютной позиции
     height: 250,
   },
   imageStyle: {

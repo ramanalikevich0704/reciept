@@ -13,7 +13,6 @@ export default function TabLayout() {
       <Stack.Screen name="main" />
       <Stack.Screen name="reciept-list" />
       <Stack.Screen name="recipe-detail" />
-      <Stack.Screen name="popular-recipes" />
     </Stack>
   );
 }

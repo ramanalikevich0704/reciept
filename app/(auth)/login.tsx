@@ -1,5 +1,5 @@
 import { ScreenTransition } from "@/components/ScreenTransition";
-import { fieldStyle, Styles } from "@/components/login/LoginStyles";
+import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
 
 import {
   getEmailRules,
@@ -55,7 +55,7 @@ interface LoginForm {
 // про дом в RN почитать
 
 // План：
-//Как сделать плавную анимацию?
+//
 // адаптация экранов под все девайсе
 // Сделать количество попыток ввода пароля или смс?
 // профиль открывается тогда, когда не нужен
@@ -82,6 +82,7 @@ interface LoginForm {
 // как передаются пропсы
 // методы ЖЦ компонента
 // Самоорганизованность необходима в компании
+// Какие есть способы создания анимации?
 
 // Ответы:
 // Примитивы: string, number, boolean, undefined, null, symbol, bigint
@@ -110,11 +111,15 @@ export default function LoginView() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { isValid, errors },
   } = useForm<LoginForm>({
     mode: "onChange",
     resolver: yupResolver(loginSchema),
   });
+
+  const emailValue = watch("email");
+  const passwordValue = watch("password");
 
   const login = (data: LoginForm) => {
     AuthService.login(data.email, data.password);
@@ -157,7 +162,13 @@ export default function LoginView() {
                 )}
                 name="email"
               />
-              <FormError message={errors.email?.message} />
+              <FormError
+                message={
+                  (emailValue?.trim() ?? "") !== ""
+                    ? errors.email?.message
+                    : undefined
+                }
+              />
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -173,7 +184,13 @@ export default function LoginView() {
                 )}
                 name="password"
               />
-              <FormError message={errors.password?.message} />
+              <FormError
+                message={
+                  (passwordValue?.trim() ?? "") !== ""
+                    ? errors.password?.message
+                    : undefined
+                }
+              />
             </View>
             {/* <Text
               style={Styles.forgetPassword}

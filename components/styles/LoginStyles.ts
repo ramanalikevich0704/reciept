@@ -1,6 +1,8 @@
 import { Background } from "@react-navigation/elements";
 import { StyleSheet } from "react-native";
 
+const PADDING_HORIZONTAL = 20;
+
 export const Styles = StyleSheet.create({
   whiteText: { color: 'white'},
   darkGrayText: { color: 'rgba(136, 148, 162, 1)'},
@@ -83,10 +85,29 @@ export const Styles = StyleSheet.create({
   },
   imageBackgroundStyle: {
     flex: 1, // Растягивает на весь экран
-    paddingHorizontal: 20,
+    paddingHorizontal: PADDING_HORIZONTAL,
   },
   blurColor: {
     backgroundColor: "rgba(25,25,25,0.4)" 
+  },
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 40,
+  },
+  header: {
+    marginTop: 44,
+    marginBottom: 24,
+  },
+  form: {
+    marginBottom: 24,
+  },
+  input: {
+    marginBottom: 12,
+  },
+  contentPadding: {
+    paddingHorizontal: PADDING_HORIZONTAL,
   },
   safeArea: {
     flex: 1,
@@ -155,6 +176,12 @@ export const Styles = StyleSheet.create({
     width: 145,
     justifyContent: "center",
     alignItems: "center",
+  },
+  backButton: {
+    position: "absolute",
+    top: 28,
+    zIndex: 10,
+    padding: 5
   },
 });
 

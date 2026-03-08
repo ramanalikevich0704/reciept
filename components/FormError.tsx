@@ -1,4 +1,4 @@
-import { Styles } from "@/components/login/LoginStyles";
+import { Styles } from "@/components/styles/LoginStyles";
 import { Text, TextStyle } from "react-native";
 
 type FormErrorProps = {

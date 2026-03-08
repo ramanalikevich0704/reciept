@@ -1,29 +1,30 @@
+import { formatPhoneMask } from "@/app/(auth)/static/static";
 import {
-  ALLOWED_TRANSITIONS,
-  SCREENS,
-} from "@/app/router/navigationGraph";
+  getEmailRules,
+  getNameRules,
+  getPhoneNumberRules,
+  getSurnameRules,
+} from "@/app/(auth)/static/static-regex";
+import { ALLOWED_TRANSITIONS, SCREENS } from "@/app/router/navigationGraph";
+import { AdaptiveContainer } from "@/components/AdaptiveContainer";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
-import { ScreenTransition } from "@/components/ScreenTransition";
 import { FormError } from "@/components/FormError";
-import { fieldStyle, Styles } from "@/components/login/LoginStyles";
+import { ScreenTransition } from "@/components/ScreenTransition";
+import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import {
-  ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
-import Icon from "react-native-vector-icons/Ionicons";
-import { formatPhoneMask, PHONE_REGEX } from "@/app/(auth)/static/static";
+import * as yup from "yup";
 
 interface ProfileForm {
   email: string;
@@ -33,30 +34,10 @@ interface ProfileForm {
 }
 
 const profileSchema = yup.object({
-  email: yup
-    .string()
-    .test("check-empty", "", (v) => (v?.length ?? 0) > 0)
-    .min(2, "Введите более двух символов")
-    .max(256, "Максимально доступная длина 256 символов")
-    .matches(/[@]/, "Необходимо написать @")
-    .matches(/[.]/, "Допишите почтовый домен")
-    .email("Поле email не соответствует формату"),
-  name: yup
-    .string()
-    .test("check-empty", "", (v) => (v?.length ?? 0) > 0)
-    .min(1, "Поле является обязательным")
-    .max(256, "Максимально доступная длина 256 символов")
-    .matches(/^[a-zA-Zа-яА-ЯёЁ\s-]+$/, "Имя может содержать только буквы, пробелы и дефис"),
-  surname: yup
-    .string()
-    .test("check-empty", "", (v) => (v?.length ?? 0) > 0)
-    .min(1, "Поле является обязательным")
-    .max(256, "Максимально доступная длина 256 символов")
-    .matches(/^[a-zA-Zа-яА-ЯёЁ\s-]+$/, "Фамилия может содержать только буквы, пробелы и дефис"),
-  phonenumber: yup
-    .string()
-    .test("check-empty", "", (v) => (v?.length ?? 0) > 0)
-    .matches(PHONE_REGEX, "Введите номер в формате +375 (44) 516-80-98"),
+  email: getEmailRules(),
+  name: getNameRules(),
+  surname: getSurnameRules(),
+  phonenumber: getPhoneNumberRules(),
 });
 
 export default function ProfileView() {
@@ -67,6 +48,7 @@ export default function ProfileView() {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { isValid, errors },
   } = useForm<ProfileForm>({
     mode: "onChange",
@@ -78,6 +60,11 @@ export default function ProfileView() {
       phonenumber: "",
     },
   });
+
+  const emailValue = watch("email");
+  const nameValue = watch("name");
+  const surnameValue = watch("surname");
+  const phonenumberValue = watch("phonenumber");
 
   const onSave = (data: ProfileForm) => {
     AuthService.updateProfile({
@@ -98,20 +85,17 @@ export default function ProfileView() {
             onPress={() => {
               const next = ALLOWED_TRANSITIONS.PROFILE.BACK;
               if (next) {
-                AuthService.logout().then(() =>
-                  router.replace(SCREENS[next])
-                );
+                AuthService.logout().then(() => router.replace(SCREENS[next]));
               }
             }}
-            style={styles.backButton}
+            style={Styles.backButton}
           />
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
+          <AdaptiveContainer
+            style={Styles.container}
+            contentContainerStyle={Styles.scrollContent}
+            scrollViewProps={{ keyboardShouldPersistTaps: "handled" }}
           >
-            <View style={styles.header}>
+            <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
                 Профиль
               </Text>
@@ -120,12 +104,12 @@ export default function ProfileView() {
               </Text>
             </View>
 
-            <View style={styles.form}>
+            <View style={Styles.form}>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Введите email"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -137,13 +121,19 @@ export default function ProfileView() {
                 )}
                 name="email"
               />
-              <FormError message={errors.email?.message} />
+              <FormError
+                message={
+                  (emailValue?.trim() ?? "") !== ""
+                    ? errors.email?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Введите имя"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -154,13 +144,19 @@ export default function ProfileView() {
                 )}
                 name="name"
               />
-              <FormError message={errors.name?.message} />
+              <FormError
+                message={
+                  (nameValue?.trim() ?? "") !== ""
+                    ? errors.name?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="Введите фамилию"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -171,13 +167,19 @@ export default function ProfileView() {
                 )}
                 name="surname"
               />
-              <FormError message={errors.surname?.message} />
+              <FormError
+                message={
+                  (surnameValue?.trim() ?? "") !== ""
+                    ? errors.surname?.message
+                    : undefined
+                }
+              />
 
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
-                    style={[...fieldStyle, styles.input]}
+                    style={[...fieldStyle, Styles.input]}
                     placeholder="+375 (44) 516-80-98"
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
@@ -189,7 +191,13 @@ export default function ProfileView() {
                 )}
                 name="phonenumber"
               />
-              <FormError message={errors.phonenumber?.message} />
+              <FormError
+                message={
+                  (phonenumberValue?.trim() ?? "") !== ""
+                    ? errors.phonenumber?.message
+                    : undefined
+                }
+              />
 
               <TouchableOpacity
                 style={[
@@ -202,31 +210,18 @@ export default function ProfileView() {
                 onPress={handleSubmit(onSave)}
               >
                 <Text
-                  style={[Styles.greenText, isValid && Styles.disableButtonText]}
+                  style={[
+                    Styles.greenText,
+                    isValid && Styles.disableButtonText,
+                  ]}
                 >
                   Сохранить
                 </Text>
               </TouchableOpacity>
             </View>
-          </ScrollView>
+          </AdaptiveContainer>
         </SafeAreaView>
       </AppBackground>
     </ScreenTransition>
   );
 }
-
-const styles = StyleSheet.create({
-  backButton: {
-    position: "absolute",
-    top: 48,
-    left: 8,
-    zIndex: 10,
-    padding: 8,
-    marginLeft: 4,
-  },
-  scroll: { flex: 1 },
-  scrollContent: { paddingBottom: 40 },
-  header: { marginTop: 44, marginBottom: 24 },
-  form: { marginBottom: 24 },
-  input: { marginBottom: 12 },
-});
