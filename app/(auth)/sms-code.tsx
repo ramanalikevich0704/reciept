@@ -1,6 +1,7 @@
 import { SMS_CODE_LENGTH } from "@/app/(auth)/static/static";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
@@ -107,25 +108,11 @@ export default function SmsCodeView() {
                 }
               />
 
-              <TouchableOpacity
-                style={[
-                  Styles.button,
-                  Styles.centerPosition,
-                  Styles.element,
-                  !isValid && Styles.buttonDisabled,
-                ]}
-                disabled={!isValid}
+              <FormButton
+                label="Подтвердить"
                 onPress={handleSubmit(onConfirm)}
-              >
-                <Text
-                  style={[
-                    Styles.greenText,
-                    isValid && Styles.disableButtonText,
-                  ]}
-                >
-                  Подтвердить
-                </Text>
-              </TouchableOpacity>
+                disabled={!isValid}
+              />
             </View>
           </View>
         </SafeAreaView>

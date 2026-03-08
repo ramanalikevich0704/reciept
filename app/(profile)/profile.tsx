@@ -9,6 +9,7 @@ import { ALLOWED_TRANSITIONS, SCREENS } from "@/app/router/navigationGraph";
 import { AdaptiveContainer } from "@/components/AdaptiveContainer";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
@@ -199,25 +200,11 @@ export default function ProfileView() {
                 }
               />
 
-              <TouchableOpacity
-                style={[
-                  Styles.button,
-                  Styles.centerPosition,
-                  Styles.element,
-                  !isValid && Styles.buttonDisabled,
-                ]}
-                disabled={!isValid}
+              <FormButton
+                label="Сохранить"
                 onPress={handleSubmit(onSave)}
-              >
-                <Text
-                  style={[
-                    Styles.greenText,
-                    isValid && Styles.disableButtonText,
-                  ]}
-                >
-                  Сохранить
-                </Text>
-              </TouchableOpacity>
+                disabled={!isValid}
+              />
             </View>
           </AdaptiveContainer>
         </SafeAreaView>

@@ -10,6 +10,7 @@ import {
 import { AdaptiveContainer } from "@/components/AdaptiveContainer";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
@@ -238,25 +239,11 @@ export default function RegisterView() {
                 }
               />
 
-              <TouchableOpacity
-                style={[
-                  Styles.button,
-                  Styles.centerPosition,
-                  Styles.element,
-                  !isValid && Styles.buttonDisabled,
-                ]}
-                disabled={!isValid}
+              <FormButton
+                label="Зарегистрироваться"
                 onPress={handleSubmit(onRegister)}
-              >
-                <Text
-                  style={[
-                    Styles.greenText,
-                    isValid && Styles.disableButtonText,
-                  ]}
-                >
-                  Зарегистрироваться
-                </Text>
-              </TouchableOpacity>
+                disabled={!isValid}
+              />
 
               <Text
                 style={[

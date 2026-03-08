@@ -6,6 +6,8 @@ import {
   getPasswordRules,
 } from "@/app/(auth)/static/static-regex";
 import { AppBackground } from "@/components/AppBackground";
+import { CreateAccountButton } from "@/components/CreateAccountButton";
+import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -198,24 +200,11 @@ export default function LoginView() {
             >
               Forget password?
             </Text> */}
-            <TouchableOpacity
-              style={[
-                Styles.button,
-                Styles.centerPosition,
-                Styles.element,
-                !isValid && Styles.buttonDisabled,
-                Styles.centerPosition,
-                Styles.element,
-              ]}
-              disabled={!isValid}
+            <FormButton
+              label="Login"
               onPress={handleSubmit(login)}
-            >
-              <Text
-                style={[Styles.greenText, isValid && Styles.disableButtonText]}
-              >
-                Login
-              </Text>
-            </TouchableOpacity>
+              disabled={!isValid}
+            />
             <Text style={Styles.loginwith}>Login with</Text>
             <View style={Styles.socialNetworkContainer}>
               <TouchableOpacity
@@ -235,24 +224,7 @@ export default function LoginView() {
               </TouchableOpacity>
             </View>
             <Text style={Styles.loginwith}>or</Text>
-            <TouchableOpacity
-              style={[
-                Styles.registerButton,
-                Styles.centerPosition,
-                Styles.element,
-              ]}
-              onPress={registerUser}
-            >
-              <Text
-                style={[
-                  Styles.mediumCustomText,
-                  Styles.boldCustomText,
-                  Styles.whiteText,
-                ]}
-              >
-                Create an account
-              </Text>
-            </TouchableOpacity>
+            <CreateAccountButton onPress={registerUser} />
           </View>
         </SafeAreaView>
       </AppBackground>

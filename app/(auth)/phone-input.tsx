@@ -2,6 +2,7 @@ import { formatPhoneMask } from "@/app/(auth)/static/static";
 import { getPhoneNumberRules } from "@/app/(auth)/static/static-regex";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
@@ -9,7 +10,7 @@ import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as yup from "yup";
 
@@ -87,14 +88,10 @@ export default function PhoneInputView() {
                 }
               />
 
-              <TouchableOpacity
-                style={[Styles.button, Styles.centerPosition, Styles.element]}
+              <FormButton
+                label="Отправить код"
                 onPress={handleSubmit(onSendCode)}
-              >
-                <Text style={[Styles.greenText, Styles.disableButtonText]}>
-                  Отправить код
-                </Text>
-              </TouchableOpacity>
+              />
             </View>
           </View>
         </SafeAreaView>
