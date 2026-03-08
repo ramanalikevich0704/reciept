@@ -3,6 +3,7 @@ import { ScreenTransition } from "@/components/ScreenTransition";
 import { Styles } from "@/components/styles/LoginStyles";
 import { RecieptDetailsStyles } from "@/components/styles/RecieptDetailsStyles";
 import { RecipeStyles } from "@/components/styles/RecipeStyles";
+import { LABELS, RECIPE_DETAIL_TEXT } from "@/constants/constants";
 import {
   getRecipeInformation,
   type RecipeInformation,
@@ -42,7 +43,7 @@ export default function RecipeDetailScreen() {
 
   const fetchRecipe = useCallback(async () => {
     if (!id || isNaN(recipeId)) {
-      setError("Invalid recipe id");
+      setError(RECIPE_DETAIL_TEXT.INVALID_ID);
       setLoading(false);
       return;
     }
@@ -52,7 +53,7 @@ export default function RecipeDetailScreen() {
       const data = await getRecipeInformation(recipeId);
       setRecipe(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load recipe");
+      setError(e instanceof Error ? e.message : RECIPE_DETAIL_TEXT.LOAD_FAILED);
     } finally {
       setLoading(false);
     }
@@ -88,7 +89,7 @@ export default function RecipeDetailScreen() {
                 RecieptDetailsStyles.loadingText,
               ]}
             >
-              Loading recipe...
+              {RECIPE_DETAIL_TEXT.LOADING}
             </Text>
           </View>
         </SafeAreaView>
@@ -112,7 +113,7 @@ export default function RecipeDetailScreen() {
             <Text
               style={[Styles.mediumCustomText, RecieptDetailsStyles.errorText]}
             >
-              {error ?? "Recipe not found"}
+              {error ?? RECIPE_DETAIL_TEXT.NOT_FOUND}
             </Text>
           </View>
         </SafeAreaView>
@@ -165,7 +166,7 @@ export default function RecipeDetailScreen() {
               {recipe.creditsText ? (
                 <Text style={RecieptDetailsStyles.authorText}>
                   <Text style={RecieptDetailsStyles.authorPrefix}>
-                    Recipe by{" "}
+                    {LABELS.RECIPE_BY}{" "}
                   </Text>
                   <Text style={RecieptDetailsStyles.authorName}>
                     {recipe.creditsText}
@@ -217,7 +218,7 @@ export default function RecipeDetailScreen() {
               </View>
             </View>
             <TouchableOpacity
-              style={RecipeStyles.favoriteButton}
+              style={[RecipeStyles.favoriteButton, RecipeStyles.bigFavouriteButtonSize]}
               activeOpacity={0.7}
               onPress={async () => {
                 const next = await toggleFavorite(recipeId);
@@ -252,7 +253,7 @@ export default function RecipeDetailScreen() {
                     RecieptDetailsStyles.sectionTitle,
                   ]}
                 >
-                  About
+                  {LABELS.SECTION_ABOUT}
                 </Text>
                 <Text style={RecieptDetailsStyles.summaryText}>
                   {summaryText}
@@ -263,7 +264,7 @@ export default function RecipeDetailScreen() {
             {recipe.extendedIngredients?.length > 0 ? (
               <View style={RecieptDetailsStyles.section}>
                 <Text style={RecieptDetailsStyles.ingredientsSectionTitle}>
-                  Ingredients
+                  {LABELS.SECTION_INGREDIENTS}
                 </Text>
                 {recipe.extendedIngredients.map((ing, idx) => (
                   <View
@@ -293,7 +294,7 @@ export default function RecipeDetailScreen() {
                     RecieptDetailsStyles.sectionTitle,
                   ]}
                 >
-                  Instructions
+                  {LABELS.SECTION_INSTRUCTIONS}
                 </Text>
                 {steps.length > 0 ? (
                   steps.map((step, idx) => (

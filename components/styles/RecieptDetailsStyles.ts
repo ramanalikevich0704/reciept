@@ -27,6 +27,7 @@ export const RecieptDetailsStyles = StyleSheet.create({
   headerLeft: {},
   backButtonWrapper: {
     marginBottom: 12,
+    alignSelf: "flex-start",
   },
   titleText: {
     fontFamily: "Apercu Pro",

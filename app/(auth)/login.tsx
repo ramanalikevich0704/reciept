@@ -1,5 +1,10 @@
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
+import {
+  LABELS,
+  LOGIN_TEXT,
+  PLACEHOLDERS,
+} from "@/constants/constants";
 
 import {
   getEmailRules,
@@ -59,8 +64,10 @@ interface LoginForm {
 // План：
 //
 // адаптация экранов под все девайсе
-// Сделать количество попыток ввода пароля или смс?
+// При тапе вне поля ввода клава не убирается
+// не везде сохраняется токен
 // профиль открывается тогда, когда не нужен
+// Сделать количество попыток ввода пароля или смс?
 // Пофиксить навигацию на флоу авторизации +(вроде все ок)
 // область видимости поля ввода в text input слишком узкое +(вроде все ок)
 // Проверить что все ошибки отображаются в качестве алертов
@@ -141,10 +148,10 @@ export default function LoginView() {
           <View style={{ marginTop: 44 }}>
             <View>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
-                Welcome to
+                {LOGIN_TEXT.WELCOME}
               </Text>
               <Text style={[Styles.whiteText, Styles.largeCustomText]}>
-                Recipe Book
+                {LOGIN_TEXT.APP_NAME}
               </Text>
             </View>
           </View>
@@ -155,7 +162,7 @@ export default function LoginView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, { marginBottom: 12 }]}
-                    placeholder={"Enter email"}
+                    placeholder={PLACEHOLDERS.EMAIL}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -176,7 +183,7 @@ export default function LoginView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle]}
-                    placeholder="Enter password"
+                    placeholder={PLACEHOLDERS.PASSWORD}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -201,11 +208,11 @@ export default function LoginView() {
               Forget password?
             </Text> */}
             <FormButton
-              label="Login"
+              label={LABELS.LOGIN}
               onPress={handleSubmit(login)}
               disabled={!isValid}
             />
-            <Text style={Styles.loginwith}>Login with</Text>
+            <Text style={Styles.loginwith}>{LOGIN_TEXT.LOGIN_WITH}</Text>
             <View style={Styles.socialNetworkContainer}>
               <TouchableOpacity
                 style={[Styles.socialNetworkButton, Styles.whitebutton]}
@@ -223,7 +230,7 @@ export default function LoginView() {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={Styles.loginwith}>or</Text>
+            <Text style={Styles.loginwith}>{LOGIN_TEXT.OR}</Text>
             <CreateAccountButton onPress={registerUser} />
           </View>
         </SafeAreaView>

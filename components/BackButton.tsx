@@ -13,6 +13,7 @@ export interface BackButtonProps {
 const DEFAULT_ICON_COLOR = "white";
 const DEFAULT_ICON_SIZE = 28;
 const HIT_SLOP = { top: 12, bottom: 12, left: 12, right: 12 };
+const MIN_TOUCH_SIZE = 44;
 
 export function BackButton({
   onPress,
@@ -25,7 +26,14 @@ export function BackButton({
     <TouchableOpacity
       style={[
         Styles.fieldForm,
-        { borderRadius: 25 },
+        {
+          borderRadius: MIN_TOUCH_SIZE,
+          // width: DEFAULT_ICON_SIZE,
+          minWidth: MIN_TOUCH_SIZE,
+          minHeight: MIN_TOUCH_SIZE,
+          justifyContent: "center",
+          alignItems: "center",
+        },
         backgroundColor !== undefined && { backgroundColor },
         style,
       ]}

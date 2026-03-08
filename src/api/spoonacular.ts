@@ -80,7 +80,7 @@ export async function searchRecipes(
   query: string,
   offset: number = 0
 ): Promise<SearchRecipesResponse> {
-  const apiKey = await secureTokenService.get('api-key')//'46ec8567d8a3484895afb7d53572aa5c'//getApiKey();
+  const apiKey = await secureTokenService.get('api-key')////getApiKey();
   //второй ключ апи: 34400fd7a6e6482abdecf956c03d41f1
   if (!apiKey) {
     console.warn("EXPO_PUBLIC_SPOONACULAR_API_KEY is not set");

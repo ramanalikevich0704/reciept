@@ -70,6 +70,20 @@ export const RecipeStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  /** Иконка сердца в карточке списка: поверх контента, правый нижний угол */
+  cardHeartBadge: {
+    position: "absolute",
+    right: 8,
+    bottom: 8,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: "rgba(242, 244, 247, 1)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+    elevation: 2,
+  },
   cellShadow: {
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 5 },
@@ -78,7 +92,7 @@ export const RecipeStyles = StyleSheet.create({
     elevation: 5,
   },
   favoriteButton: {
-    borderRadius: 26,
+    borderRadius: 25,
     backgroundColor: "rgba(242, 244, 247, 1)",
     justifyContent: "center",
     alignItems: "center",

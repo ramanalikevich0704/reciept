@@ -2,6 +2,10 @@ import { recieptBackgroundImage } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { searchInput, Styles } from "@/components/styles/LoginStyles";
+import {
+  PLACEHOLDERS,
+  RECIEPT_LIST_TEXT,
+} from "@/constants/constants";
 import { RecipeStyles } from "@/components/styles/RecipeStyles";
 import {
   getRecipeInformation,
@@ -83,7 +87,7 @@ export default function RecipeListScreen() {
     if (isPopular) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      // fetchRecipes(searchQuery, 0, false);
+      fetchRecipes(searchQuery, 0, false);
     }, DEBOUNCE_MS);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -129,7 +133,7 @@ export default function RecipeListScreen() {
   const onEndReached = useCallback(() => {
     if (isPopular || loadingMore || loading) return;
     if (recipes.length >= totalResults || totalResults === 0) return;
-    // fetchRecipes(searchQuery, recipes.length, true);
+    fetchRecipes(searchQuery, recipes.length, true);
   }, [
     isPopular,
     loadingMore,
@@ -166,22 +170,24 @@ export default function RecipeListScreen() {
         {item.title}
       </Text>
       {isPopular && (
-        <View style={RecipeStyles.favoriteButton} pointerEvents="none">
+        <View style={RecipeStyles.cardHeartBadge} pointerEvents="none">
           <Icon name="heart" size={21} color="#FF3B30" />
         </View>
       )}
     </TouchableOpacity>
   );
 
-  const title = isPopular ? "Популярные рецепты" : "Search by Recipe";
+  const title = isPopular
+    ? RECIEPT_LIST_TEXT.TITLE_POPULAR
+    : RECIEPT_LIST_TEXT.TITLE_SEARCH;
   const searchPlaceholder = isPopular
-    ? "Поиск по списку..."
-    : "What recipe are you looking for?";
+    ? PLACEHOLDERS.SEARCH_LIST
+    : PLACEHOLDERS.SEARCH_RECIPE;
 
   const listHeader = isPopular ? (
     <View style={RecipeStyles.listHeader}>
       <Text style={[Styles.smallCustomText, RecipeStyles.countText]}>
-        {filteredPopular.length} из {popularRecipes.length} рецептов
+        {RECIEPT_LIST_TEXT.COUNT_RECIPES(filteredPopular.length, popularRecipes.length)}
       </Text>
     </View>
   ) : (
@@ -191,7 +197,7 @@ export default function RecipeListScreen() {
       ) : (
         <View style={{ alignSelf: "flex-start" }}>
           <Text style={[Styles.smallCustomText, RecipeStyles.countText]}>
-            {totalResults} Recipes found
+            {RECIEPT_LIST_TEXT.FOUND(totalResults)}
           </Text>
         </View>
       )}
@@ -202,8 +208,8 @@ export default function RecipeListScreen() {
     <View style={[Styles.container, RecipeStyles.emptyWrap]}>
       <Text style={[Styles.ordinaryCustomText, RecipeStyles.emptyText]}>
         {popularRecipes.length === 0
-          ? "Нет избранных рецептов. Добавьте их в деталях рецепта."
-          : "Ничего не найдено по запросу"}
+          ? RECIEPT_LIST_TEXT.EMPTY_FAVORITES
+          : RECIEPT_LIST_TEXT.EMPTY_SEARCH}
       </Text>
     </View>
   ) : null;
@@ -242,7 +248,7 @@ export default function RecipeListScreen() {
               <Text
                 style={[Styles.ordinaryCustomText, RecipeStyles.loadingText]}
               >
-                Загрузка избранного...
+                {RECIEPT_LIST_TEXT.LOADING_FAVORITES}
               </Text>
             </View>
           </View>

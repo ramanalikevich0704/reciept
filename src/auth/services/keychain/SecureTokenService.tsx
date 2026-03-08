@@ -26,5 +26,3 @@ export const secureTokenService: RSecureTokenService = {
         .catch((error) => handleSecureError(error))
     }
 };
-
-// export const secureTokenService: RSecureTokenService = SecureTokenService

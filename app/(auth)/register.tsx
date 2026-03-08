@@ -14,6 +14,11 @@ import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
+import {
+  LABELS,
+  PLACEHOLDERS,
+  REGISTER_TEXT,
+} from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
@@ -91,10 +96,10 @@ export default function RegisterView() {
           >
             <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
-                Create account
+                {REGISTER_TEXT.HEADER}
               </Text>
               <Text style={[Styles.whiteText, Styles.largeCustomText]}>
-                Recipe Book
+                {REGISTER_TEXT.APP_NAME}
               </Text>
             </View>
 
@@ -104,7 +109,7 @@ export default function RegisterView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Введите email"
+                    placeholder={PLACEHOLDERS.EMAIL_RU}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -128,7 +133,7 @@ export default function RegisterView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Введите имя"
+                    placeholder={PLACEHOLDERS.NAME}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -151,7 +156,7 @@ export default function RegisterView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Введите фамилию"
+                    placeholder={PLACEHOLDERS.SURNAME}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -174,7 +179,7 @@ export default function RegisterView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="+375 (44) 516-80-98"
+                    placeholder={PLACEHOLDERS.PHONE}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={(text) => onChange(formatPhoneMask(text))}
@@ -198,7 +203,7 @@ export default function RegisterView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Введите пароль"
+                    placeholder={PLACEHOLDERS.PASSWORD_RU}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -221,7 +226,7 @@ export default function RegisterView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Подтвердите пароль"
+                    placeholder={PLACEHOLDERS.CONFIRM_PASSWORD}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -240,7 +245,7 @@ export default function RegisterView() {
               />
 
               <FormButton
-                label="Зарегистрироваться"
+                label={LABELS.REGISTER}
                 onPress={handleSubmit(onRegister)}
                 disabled={!isValid}
               />
@@ -252,7 +257,7 @@ export default function RegisterView() {
                 ]}
                 onPress={() => router.back()}
               >
-                Уже есть аккаунт? Войти
+                {REGISTER_TEXT.HAVE_ACCOUNT}
               </Text>
             </View>
           </AdaptiveContainer>

@@ -1,4 +1,5 @@
 import { Styles } from "@/components/styles/LoginStyles";
+import { LABELS } from "@/constants/constants";
 import {
   StyleProp,
   Text,
@@ -14,11 +15,9 @@ export interface CreateAccountButtonProps {
   textStyle?: StyleProp<TextStyle>;
 }
 
-const DEFAULT_LABEL = "Create an account";
-
 export function CreateAccountButton({
   onPress,
-  label = DEFAULT_LABEL,
+  label = LABELS.CREATE_ACCOUNT,
   style,
   textStyle,
 }: CreateAccountButtonProps) {

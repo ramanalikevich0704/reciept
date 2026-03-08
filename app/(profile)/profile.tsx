@@ -13,6 +13,11 @@ import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
+import {
+  LABELS,
+  PLACEHOLDERS,
+  PROFILE_TEXT,
+} from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -98,10 +103,10 @@ export default function ProfileView() {
           >
             <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
-                Профиль
+                {PROFILE_TEXT.HEADER}
               </Text>
               <Text style={[Styles.whiteText, Styles.largeCustomText]}>
-                Recipe Book
+                {PROFILE_TEXT.APP_NAME}
               </Text>
             </View>
 
@@ -111,7 +116,7 @@ export default function ProfileView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Введите email"
+                    placeholder={PLACEHOLDERS.EMAIL_RU}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -135,7 +140,7 @@ export default function ProfileView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Введите имя"
+                    placeholder={PLACEHOLDERS.NAME}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -158,7 +163,7 @@ export default function ProfileView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="Введите фамилию"
+                    placeholder={PLACEHOLDERS.SURNAME}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -181,7 +186,7 @@ export default function ProfileView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="+375 (44) 516-80-98"
+                    placeholder={PLACEHOLDERS.PHONE}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={(text) => onChange(formatPhoneMask(text))}
@@ -201,7 +206,7 @@ export default function ProfileView() {
               />
 
               <FormButton
-                label="Сохранить"
+                label={LABELS.SAVE}
                 onPress={handleSubmit(onSave)}
                 disabled={!isValid}
               />

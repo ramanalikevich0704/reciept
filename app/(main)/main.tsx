@@ -3,6 +3,7 @@ import { BackButton } from "@/components/BackButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { Styles } from "@/components/styles/LoginStyles";
 import { MainStyles } from "@/components/styles/MainStyles";
+import { LABELS, MAIN_TEXT } from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { useAuthStore } from "@/src/auth/store/useAuthStore";
 import { useRouter } from "expo-router";
@@ -13,12 +14,12 @@ import Icon from "react-native-vector-icons/Ionicons";
 const MENU_ITEMS = [
   {
     id: "recipes",
-    title: "Рецепты",
+    title: LABELS.MENU_RECIPES,
     imageUri: "https://img.spoonacular.com/recipes/716429-312x231.jpg",
   },
   {
     id: "popular",
-    title: "Популярные",
+    title: LABELS.MENU_POPULAR,
     imageUri: "https://img.spoonacular.com/recipes/715538-312x231.jpg",
   },
 ] as const;
@@ -27,7 +28,7 @@ export default function ProfileView() {
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const displayName =
-    user?.displayName ?? user?.email?.split("@")[0] ?? "Гость";
+    user?.displayName ?? user?.email?.split("@")[0] ?? MAIN_TEXT.GUEST;
 
   const { AuthService } = useAuth();
 
@@ -44,7 +45,7 @@ export default function ProfileView() {
           <View style={MainStyles.header}>
             <View style={[Styles.container, MainStyles.greetingBlock]}>
               <Text style={[Styles.whiteText, MainStyles.greetingLabel]}>
-                Привет,
+                {MAIN_TEXT.GREETING}
               </Text>
               <Text
                 style={[Styles.whiteText, MainStyles.greetingName]}

@@ -24,13 +24,11 @@ interface RAuthService {
   updateProfile: (data: ProfileData) => Promise<void>;
   googleIn: () => void;
   signInWithPhoneNumber: (phoneNumber: string) => Promise<void>;
-  // confirmCode: () => void;
-  /** Подтверждение кода из SMS (код передаётся явно, для экрана sms-code) */
   confirmCode: (code: string) => void;
 }
 
 const apiKey = "api-key";
-const apiToken = '34400fd7a6e6482abdecf956c03d41f1'//"46ec8567d8a3484895afb7d53572aa5c";
+const apiToken = "46ec8567d8a3484895afb7d53572aa5c";//'34400fd7a6e6482abdecf956c03d41f1'
 
 export const useAuth = () => {
   const confirmation = useAuthStore((s) => s.confirmation);
@@ -43,7 +41,6 @@ export const useAuth = () => {
 
   const AuthService: RAuthService = {
     login: function (email: string, password: string) {
-      // logoutUserService.logoutUser()
       signInUserService
         .signInUser(email, password)
         .then(() => {
@@ -60,9 +57,11 @@ export const useAuth = () => {
       });
     },
     register: function (user: RUser, password: string) {
-      logoutUserService.logoutUser();
       signUpUserService
         .signUpUser(user, password)
+        .then(() => {
+          secureTokenService.save(apiKey, apiToken);
+        })
         .catch((error) =>
           handleSecureError(error.message, "Ошибка при регистрации:"),
         );
@@ -98,20 +97,6 @@ export const useAuth = () => {
           throw error;
         });
     },
-    // confirmCode: function (): void {
-    //   confirmCode(code, confirmation)
-    //     .then((isConfirmed) => {
-    //       if (isConfirmed) {
-    //         secureTokenService.save(apiKey, apiToken);
-    //         clearPhoneAuth();
-    //       } else {
-    //         logoutUserService.logoutUser();
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       handleSecureError(error?.message ?? "Ошибка", "Неверный код из SMS");
-    //     });
-    // },
     confirmCode: function (smsCode: string): void {
       confirmCode(smsCode, confirmation)
         .then((isConfirmed) => {
@@ -119,8 +104,7 @@ export const useAuth = () => {
             console.log("confirmCode finished");
             console.log("isConfirmed:" + isConfirmed);
             console.log(authInstance.currentUser)
-            // secureTokenService.save(apiKey, apiToken);
-            // clearPhoneAuth();
+            secureTokenService.save(apiKey, apiToken);
           } else {
             logoutUserService.logoutUser();
             //нужно ли чистить zustand?

@@ -6,6 +6,11 @@ import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
+import {
+  LABELS,
+  PLACEHOLDERS,
+  PHONE_INPUT_TEXT,
+} from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
@@ -56,10 +61,10 @@ export default function PhoneInputView() {
           <View style={[Styles.container, Styles.scrollContent]}>
             <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
-                Вход по номеру телефона
+                {PHONE_INPUT_TEXT.HEADER}
               </Text>
               <Text style={[Styles.whiteText, Styles.largeCustomText]}>
-                Recipe Book
+                {PHONE_INPUT_TEXT.APP_NAME}
               </Text>
             </View>
 
@@ -69,7 +74,7 @@ export default function PhoneInputView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="+375 (44) 516-80-98"
+                    placeholder={PLACEHOLDERS.PHONE}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={(text) => onChange(formatPhoneMask(text))}
@@ -89,7 +94,7 @@ export default function PhoneInputView() {
               />
 
               <FormButton
-                label="Отправить код"
+                label={LABELS.SEND_CODE}
                 onPress={handleSubmit(onSendCode)}
               />
             </View>

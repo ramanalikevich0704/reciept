@@ -5,6 +5,11 @@ import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
+import {
+  LABELS,
+  PLACEHOLDERS,
+  SMS_CODE_TEXT,
+} from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
@@ -55,10 +60,10 @@ export default function SmsCodeView() {
         <AppBackground>
           <SafeAreaView style={Styles.safeArea}>
             <Text style={[Styles.whiteText, { padding: 20 }]}>
-              Нет данных верификации. Вернитесь и отправьте код снова.
+              {SMS_CODE_TEXT.NO_VERIFICATION}
             </Text>
             <TouchableOpacity onPress={() => router.back()}>
-              <Text style={Styles.whiteText}>Назад</Text>
+              <Text style={Styles.whiteText}>{LABELS.BACK}</Text>
             </TouchableOpacity>
           </SafeAreaView>
         </AppBackground>
@@ -76,10 +81,10 @@ export default function SmsCodeView() {
           >
             <View style={Styles.header}>
               <Text style={[Styles.whiteText, Styles.mediumStandardText]}>
-                Введите код из SMS
+                {SMS_CODE_TEXT.HEADER}
               </Text>
               <Text style={[Styles.whiteText, Styles.largeCustomText]}>
-                Recipe Book
+                {SMS_CODE_TEXT.APP_NAME}
               </Text>
             </View>
 
@@ -89,7 +94,7 @@ export default function SmsCodeView() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={[...fieldStyle, Styles.input]}
-                    placeholder="123456"
+                    placeholder={PLACEHOLDERS.SMS_CODE}
                     placeholderTextColor={Styles.whiteText.color}
                     onBlur={onBlur}
                     onChangeText={onChange}
@@ -109,7 +114,7 @@ export default function SmsCodeView() {
               />
 
               <FormButton
-                label="Подтвердить"
+                label={LABELS.CONFIRM}
                 onPress={handleSubmit(onConfirm)}
                 disabled={!isValid}
               />

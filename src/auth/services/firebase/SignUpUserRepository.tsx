@@ -3,7 +3,7 @@ import { authInstance } from "@/src/auth/services/firebase/FirebaseConfiguration
 import { createUserWithEmailAndPassword } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
-const signUpUser = async (newUser: RUser, password: string) => {
+const signUpUser = async (newUser: RUser, password: string): Promise<void> => {
   const userCredential = await createUserWithEmailAndPassword(
     authInstance,
     newUser.email,
