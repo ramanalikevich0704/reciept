@@ -18,8 +18,6 @@ const signUpUser = async (newUser: RUser, password: string): Promise<void> => {
     surname: newUser.surname,
     phoneNumber: newUser.phoneNumber,
   });
-
-  console.log("Пользователь зарегистрирован и данные сохранены!");
 };
 
 export default { signUpUser };

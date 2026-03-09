@@ -68,17 +68,12 @@ export const useAuth = () => {
     },
     updateProfile: function (data: ProfileData) {
       const uid = getCurrentUid();
-      console.log('updateProfile')
-      console.log(uid)
-      console.log(authInstance.currentUser)
       if (!uid) return Promise.reject(new Error("Пользователь не авторизован"));
       return updateProfileService.updateProfile(uid, data).catch((error) => {
         handleSecureError(error.message, "Ошибка при сохранении профиля:");
-        throw error;
       });
     },
     googleIn: function (): void {
-      console.log("googleIn flow");
       googleSignIn()
         .then(() => {
           secureTokenService.save(apiKey, apiToken);
@@ -94,16 +89,12 @@ export const useAuth = () => {
         })
         .catch((error) => {
           handleSecureError(error.message, "Ошибка авторизации через телефон:");
-          throw error;
         });
     },
     confirmCode: function (smsCode: string): void {
       confirmCode(smsCode, confirmation)
         .then((isConfirmed) => {
           if (isConfirmed) {
-            console.log("confirmCode finished");
-            console.log("isConfirmed:" + isConfirmed);
-            console.log(authInstance.currentUser)
             secureTokenService.save(apiKey, apiToken);
           } else {
             logoutUserService.logoutUser();
@@ -126,5 +117,3 @@ export const useAuth = () => {
     confirmation,
   };
 };
-
-// export const authService: RAuthService = AuthService;

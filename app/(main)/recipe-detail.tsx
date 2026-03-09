@@ -210,7 +210,11 @@ export default function RecipeDetailScreen() {
                             overflow: "hidden",
                           }}
                         >
-                          <Icon name="star" size={starSize} color={Colors.STAR_FILLED} />
+                          <Icon
+                            name="star"
+                            size={starSize}
+                            color={Colors.STAR_FILLED}
+                          />
                         </View>
                       )}
                     </View>
@@ -219,7 +223,10 @@ export default function RecipeDetailScreen() {
               </View>
             </View>
             <TouchableOpacity
-              style={[RecipeStyles.favoriteButton, RecipeStyles.bigFavouriteButtonSize]}
+              style={[
+                RecipeStyles.favoriteButton,
+                RecipeStyles.bigFavouriteButtonSize,
+              ]}
               activeOpacity={0.7}
               onPress={async () => {
                 const next = await toggleFavorite(recipeId);

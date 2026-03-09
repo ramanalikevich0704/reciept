@@ -3,10 +3,7 @@ import { BackButton } from "@/components/BackButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { searchInput, Styles } from "@/components/styles/LoginStyles";
 import { Colors } from "@/constants/ColorConstants";
-import {
-  PLACEHOLDERS,
-  RECIEPT_LIST_TEXT,
-} from "@/constants/constants";
+import { PLACEHOLDERS, RECIEPT_LIST_TEXT } from "@/constants/constants";
 import { RecipeStyles } from "@/components/styles/RecipeStyles";
 import {
   getRecipeInformation,
@@ -171,7 +168,13 @@ export default function RecipeListScreen() {
         {item.title}
       </Text>
       {isPopular && (
-        <View style={[RecipeStyles.cardHeartBadge, RecipeStyles.smallFavouriteButtonSize]} pointerEvents="none">
+        <View
+          style={[
+            RecipeStyles.cardHeartBadge,
+            RecipeStyles.smallFavouriteButtonSize,
+          ]}
+          pointerEvents="none"
+        >
           <Icon name="heart" size={21} color={Colors.HEART_ACTIVE} />
         </View>
       )}
@@ -188,7 +191,10 @@ export default function RecipeListScreen() {
   const listHeader = isPopular ? (
     <View style={RecipeStyles.listHeader}>
       <Text style={[Styles.smallCustomText, RecipeStyles.countText]}>
-        {RECIEPT_LIST_TEXT.COUNT_RECIPES(filteredPopular.length, popularRecipes.length)}
+        {RECIEPT_LIST_TEXT.COUNT_RECIPES(
+          filteredPopular.length,
+          popularRecipes.length,
+        )}
       </Text>
     </View>
   ) : (

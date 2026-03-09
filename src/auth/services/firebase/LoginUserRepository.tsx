@@ -10,7 +10,6 @@ const signInUser = async (
       email,
       password,
     );
-    console.log("Пользователь залогинен и данные сохранены!");
 
     return userCredential.user;
 };

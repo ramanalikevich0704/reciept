@@ -6,11 +6,7 @@ import { FormButton } from "@/components/FormButton";
 import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
-import {
-  LABELS,
-  PLACEHOLDERS,
-  PHONE_INPUT_TEXT,
-} from "@/constants/constants";
+import { LABELS, PLACEHOLDERS, PHONE_INPUT_TEXT } from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";

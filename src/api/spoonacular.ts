@@ -86,7 +86,6 @@ export async function searchRecipes(
     console.warn("EXPO_PUBLIC_SPOONACULAR_API_KEY is not set");
     return { offset: 0, number: 0, results: [], totalResults: 0 };
   }
-  console.log('request-----')
   const params = new URLSearchParams({
     apiKey: apiKey,
     number: String(PAGE_SIZE),
@@ -97,7 +96,6 @@ export async function searchRecipes(
   }
   const url = `${API_BASE}/recipes/complexSearch?${params.toString()}`;
   const res = await fetch(url);
-  console.log(res)
   if (!res.ok) {
     throw new Error(`Spoonacular API error: ${res.status}`);
   }

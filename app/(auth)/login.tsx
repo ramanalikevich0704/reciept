@@ -1,10 +1,6 @@
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
-import {
-  LABELS,
-  LOGIN_TEXT,
-  PLACEHOLDERS,
-} from "@/constants/constants";
+import { LABELS, LOGIN_TEXT, PLACEHOLDERS } from "@/constants/constants";
 
 import {
   getEmailRules,
@@ -18,7 +14,15 @@ import { useAuth } from "@/src/auth/services/AuthService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Keyboard,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import * as yup from "yup";
@@ -63,9 +67,10 @@ interface LoginForm {
 
 // План：
 //
-// адаптация экранов под все девайсе
-// При тапе вне поля ввода клава не убирается
-// не везде сохраняется токен
+// адаптация экранов под все девайсе ???
+// Предусмотреть ошибки все возможные
+// При тапе вне поля ввода клава не убирается(TouchableWithoutFeedback очень ломает логику)
+// не везде сохраняется токен +++
 // профиль открывается тогда, когда не нужен
 // Сделать количество попыток ввода пароля или смс?
 // Пофиксить навигацию на флоу авторизации +(вроде все ок)

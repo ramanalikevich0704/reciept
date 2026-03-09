@@ -22,24 +22,14 @@ export async function confirmCode(
   code: string,
   confirmation: FirebaseAuthTypes.ConfirmationResult | null,
 ): Promise<boolean> {
-  console.log("что было до")
-  console.log(authInstance.currentUser)
-  console.log("confirmCode!");
-  // if (!confirmation?.verificationId) return false;
   const userCredential = await confirmation?.confirm(code);
 
   if (userCredential?.user) {
-    // console.log(userCredential?.user)
-    const user = await firestore()
+    await firestore()
       .collection("users")
       .doc(userCredential.user.uid)
       .get();
-
-    console.log("что стало после")
-    // console.log(authInstance.currentUser)
-    console.log(user.data())
-    console.log(userCredential?.user);
-    if (userCredential?.user) return true;
+    return true;
   }
   return false;
 }
@@ -50,9 +40,7 @@ export async function sendVerificationCode(
 ): Promise<FirebaseAuthTypes.ConfirmationResult> {
   const e164 = toE164(phoneNumber);
   const confirmation = await authInstance.signInWithPhoneNumber(e164);
-  // setConfirmation(confirmation);
-  console.log("SMS ушло!");
-  return confirmation
+  return confirmation;
 }
 
 // const RECAPTCHA_SITE_KEY = "6LfBYHgsAAAAAPG4cy-180UC0RppfX0VrJ0-Fqft";
