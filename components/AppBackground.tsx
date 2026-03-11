@@ -1,0 +1,68 @@
+import { Styles } from "@/components/styles/LoginStyles";
+import { Colors } from "@/constants/ColorConstants";
+import React from "react";
+import {
+  ImageBackground,
+  ImageSourcePropType,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
+
+const defaultImage = require("@/assets/images/login-background.jpg");
+/** Фон для главного экрана (подставляется @1x/@2x/@3x по плотности экрана) */
+export const recieptBackgroundImage = require("@/assets/images/reciept-background.png");
+
+export const styles = StyleSheet.create({
+  root: {
+    height: "100%",
+    width: "100%",
+    backgroundColor: Colors.BLACK,
+  },
+  image: {
+    flex: 1,
+    ...Styles.contentPadding,
+  },
+  recieptImage: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    height: 250,
+  },
+  imageStyle: {
+    flex: 1,
+    backgroundColor: Colors.IMAGE_OVERLAY,
+  },
+  blur: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: Colors.OVERLAY_DARK,
+  },
+});
+
+type AppBackgroundProps = {
+  children: React.ReactNode;
+  source?: ImageSourcePropType;
+  contentStyle?: ViewStyle;
+};
+
+export function AppBackground({
+  children,
+  source = defaultImage,
+  contentStyle,
+}: AppBackgroundProps) {
+  return (
+    <View style={styles.root}>
+      <ImageBackground
+        source={source}
+        resizeMode="cover"
+        style={[styles.image, contentStyle]}
+        imageStyle={styles.imageStyle}
+      >
+        <View style={styles.blur} />
+        {children}
+      </ImageBackground>
+    </View>
+  );
+}
