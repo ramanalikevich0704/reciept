@@ -1,17 +1,20 @@
 import { authInstance } from "@/src/auth/services/firebase/FirebaseConfiguration";
-import { signInWithEmailAndPassword, FirebaseAuthTypes } from "@react-native-firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  FirebaseAuthTypes,
+} from "@react-native-firebase/auth";
 
 const signInUser = async (
   email: string,
   password: string,
 ): Promise<FirebaseAuthTypes.User | null> => {
-    const userCredential = await signInWithEmailAndPassword(
-      authInstance,
-      email,
-      password,
-    );
+  const userCredential = await signInWithEmailAndPassword(
+    authInstance,
+    email,
+    password,
+  );
 
-    return userCredential.user;
+  return userCredential.user;
 };
 
 export const getToken = async () => {

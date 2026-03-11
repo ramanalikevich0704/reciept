@@ -6,9 +6,9 @@ import { RecipeStyles } from "@/components/styles/RecipeStyles";
 import { Colors } from "@/constants/ColorConstants";
 import { LABELS, RECIPE_DETAIL_TEXT } from "@/constants/constants";
 import {
-  getRecipeInformation,
   type RecipeInformation,
-} from "@/src/api/spoonacular";
+  useReciept,
+} from "@/src/auth/api/RecieptApiService";
 import {
   isFavorite as checkIsFavorite,
   toggleFavorite,
@@ -35,6 +35,7 @@ function stripHtml(html: string): string {
 
 export default function RecipeDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { RecieptService } = useReciept();
   const [recipe, setRecipe] = useState<RecipeInformation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,14 +52,14 @@ export default function RecipeDetailScreen() {
     setLoading(true);
     setError(null);
     try {
-      const data = await getRecipeInformation(recipeId);
+      const data = await RecieptService.getRecipeInformation(recipeId);
       setRecipe(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : RECIPE_DETAIL_TEXT.LOAD_FAILED);
     } finally {
       setLoading(false);
     }
-  }, [id, recipeId]);
+  }, [RecieptService, id, recipeId]);
 
   useEffect(() => {
     fetchRecipe();

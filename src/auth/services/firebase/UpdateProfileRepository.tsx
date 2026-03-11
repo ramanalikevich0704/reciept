@@ -7,10 +7,7 @@ export interface ProfileData {
   phoneNumber: string;
 }
 
-const updateProfile = async (
-  uid: string,
-  data: ProfileData
-): Promise<void> => {
+const updateProfile = async (uid: string, data: ProfileData): Promise<void> => {
   await firestore().collection("users").doc(uid).set(
     {
       email: data.email,
@@ -18,7 +15,7 @@ const updateProfile = async (
       surname: data.surname,
       phoneNumber: data.phoneNumber,
     },
-    { merge: true }
+    { merge: true },
   );
 };
 

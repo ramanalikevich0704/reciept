@@ -2,15 +2,14 @@ import { recieptBackgroundImage } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
 import { ScreenTransition } from "@/components/ScreenTransition";
 import { searchInput, Styles } from "@/components/styles/LoginStyles";
+import { RecipeStyles } from "@/components/styles/RecipeStyles";
 import { Colors } from "@/constants/ColorConstants";
 import { PLACEHOLDERS, RECIEPT_LIST_TEXT } from "@/constants/constants";
-import { RecipeStyles } from "@/components/styles/RecipeStyles";
 import {
-  getRecipeInformation,
-  searchRecipes,
   type RecipeInformation,
   type RecipeItem,
-} from "@/src/api/spoonacular";
+  useReciept,
+} from "@/src/auth/api/RecieptApiService";
 import { getFavoriteIds } from "@/src/storage/favoriteRecipes";
 import { useFocusEffect } from "@react-navigation/native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -48,6 +47,7 @@ function toListItemFromInfo(r: RecipeInformation): ListItem {
 export default function RecipeListScreen() {
   const { mode } = useLocalSearchParams<{ mode?: string }>();
   const isPopular = mode === "popular";
+  const { RecieptService } = useReciept();
 
   // Search mode state
   const [searchQuery, setSearchQuery] = useState("");
@@ -66,7 +66,7 @@ export default function RecipeListScreen() {
       if (append) setLoadingMore(true);
       else setLoading(true);
       try {
-        const res = await searchRecipes(query, offset);
+        const res = await RecieptService.searchRecipes(query, offset);
         const rows = res.results.map(toListItem);
         setTotalResults(res.totalResults);
         setRecipes((prev) => (append ? [...prev, ...rows] : rows));
@@ -101,7 +101,7 @@ export default function RecipeListScreen() {
         return;
       }
       const results = await Promise.all(
-        ids.map((id) => getRecipeInformation(id)),
+        ids.map((id) => RecieptService.getRecipeInformation(id)),
       );
       setPopularRecipes(results);
     } catch {
@@ -109,7 +109,7 @@ export default function RecipeListScreen() {
     } finally {
       setPopularLoading(false);
     }
-  }, []);
+  }, [RecieptService]);
 
   useFocusEffect(
     useCallback(() => {

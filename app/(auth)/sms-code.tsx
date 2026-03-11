@@ -1,33 +1,22 @@
-import { SMS_CODE_LENGTH } from "@/app/(auth)/static/static";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
-import { FormButton } from "@/components/FormButton";
-import { FormError } from "@/components/FormError";
-import { ScreenTransition } from "@/components/ScreenTransition";
-import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
-import { LABELS, PLACEHOLDERS, SMS_CODE_TEXT } from "@/constants/constants";
-import { useAuth } from "@/src/auth/services/AuthService";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
 import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+  createFormFields,
+  FieldType,
+} from "@/components/FormFieldFactory";
+import { FormButton } from "@/components/FormButton";
+import { ScreenTransition } from "@/components/ScreenTransition";
+import { Styles } from "@/components/styles/LoginStyles";
+import { LABELS, SMS_CODE_TEXT } from "@/constants/constants";
+import { useAuth } from "@/src/auth/services/AuthService";
+import {
+  SmsCodeForm,
+  smsCodeSchema,
+} from "@/src/auth/services/validation/scheme/SmsCodeValidationScheme";
+import { useValidation } from "@/src/auth/services/validation/ValidationService";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as yup from "yup";
-import { getSmsRules } from "./static/static-regex";
-
-interface SmsCodeForm {
-  code: string;
-}
-
-const smsCodeSchema = yup.object({
-  code: getSmsRules(),
-});
 
 export default function SmsCodeView() {
   const router = useRouter();
@@ -38,13 +27,9 @@ export default function SmsCodeView() {
     handleSubmit,
     watch,
     formState: { isValid, errors },
-  } = useForm<SmsCodeForm>({
-    mode: "onChange",
-    resolver: yupResolver(smsCodeSchema),
+  } = useValidation<SmsCodeForm>(smsCodeSchema, {
     defaultValues: { code: "" },
   });
-
-  const codeValue = watch("code");
 
   const onConfirm = (data: SmsCodeForm) => {
     AuthService.confirmCode(data.code);
@@ -85,29 +70,11 @@ export default function SmsCodeView() {
             </View>
 
             <View style={Styles.form}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle, Styles.input]}
-                    placeholder={PLACEHOLDERS.SMS_CODE}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    keyboardType="number-pad"
-                    maxLength={SMS_CODE_LENGTH}
-                  />
-                )}
-                name="code"
-              />
-              <FormError
-                message={
-                  (codeValue?.trim() ?? "") !== ""
-                    ? errors.code?.message
-                    : undefined
-                }
-              />
+              {createFormFields<SmsCodeForm>([FieldType.SMS_CODE], {
+                control,
+                errors,
+                watch,
+              })}
 
               <FormButton
                 label={LABELS.CONFIRM}

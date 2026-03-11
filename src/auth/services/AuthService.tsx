@@ -23,7 +23,7 @@ interface RAuthService {
   register: (user: RUser, password: string) => void;
   updateProfile: (data: ProfileData) => Promise<void>;
   googleIn: () => void;
-  signInWithPhoneNumber: (phoneNumber: string) => Promise<void>;
+  signInWithPhoneNumber: (phoneNumber: string) => void;
   confirmCode: (code: string) => void;
 }
 
@@ -35,7 +35,6 @@ export const useAuth = () => {
   const setConfirmation = useAuthStore((s) => s.setConfirmation);
   const code = useAuthStore((s) => s.code);
   const setCode = useAuthStore((s) => s.setCode);
-  const clearPhoneAuth = useAuthStore((s) => s.clearPhoneAuth);
   const [token, setToken] = React.useState<string>("");
   const [showWebView, setShowWebView] = useState(false);
 
@@ -82,7 +81,7 @@ export const useAuth = () => {
           handleSecureError(error.message, "Ошибка авторизации через Google:");
         });
     },
-    signInWithPhoneNumber: function (phoneNumber: string): Promise<void> {
+    signInWithPhoneNumber: function (phoneNumber: string) {
       return sendVerificationCode(phoneNumber, token)
         .then((confirmation) => {
           setConfirmation(confirmation);

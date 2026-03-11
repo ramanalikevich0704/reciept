@@ -1,50 +1,25 @@
-import { formatPhoneMask } from "@/app/(auth)/static/static";
-import {
-  getEmailRules,
-  getNameRules,
-  getPhoneNumberRules,
-  getSurnameRules,
-} from "@/app/(auth)/static/static-regex";
 import { ALLOWED_TRANSITIONS, SCREENS } from "@/app/router/navigationGraph";
 import { AdaptiveContainer } from "@/components/AdaptiveContainer";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import {
+  createFormFields,
+  FieldType,
+} from "@/components/FormFieldFactory";
 import { FormButton } from "@/components/FormButton";
-import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
-import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
-import {
-  LABELS,
-  PLACEHOLDERS,
-  PROFILE_TEXT,
-} from "@/constants/constants";
+import { Styles } from "@/components/styles/LoginStyles";
+import { LABELS, PLACEHOLDERS, PROFILE_TEXT } from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
-import { useAuthStore } from "@/src/auth/store/useAuthStore";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
 import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from "react-native";
+  ProfileForm,
+  profileSchema,
+} from "@/src/auth/services/validation/scheme/ProfileValidationScheme";
+import { useValidation } from "@/src/auth/services/validation/ValidationService";
+import { useAuthStore } from "@/src/auth/store/useAuthStore";
+import { useRouter } from "expo-router";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as yup from "yup";
-
-interface ProfileForm {
-  email: string;
-  name: string;
-  surname: string;
-  phonenumber: string;
-}
-
-const profileSchema = yup.object({
-  email: getEmailRules(),
-  name: getNameRules(),
-  surname: getSurnameRules(),
-  phonenumber: getPhoneNumberRules(),
-});
 
 export default function ProfileView() {
   const router = useRouter();
@@ -56,9 +31,7 @@ export default function ProfileView() {
     handleSubmit,
     watch,
     formState: { isValid, errors },
-  } = useForm<ProfileForm>({
-    mode: "onChange",
-    resolver: yupResolver(profileSchema),
+  } = useValidation<ProfileForm>(profileSchema, {
     defaultValues: {
       email: user?.email ?? "",
       name: "",
@@ -66,11 +39,6 @@ export default function ProfileView() {
       phonenumber: "",
     },
   });
-
-  const emailValue = watch("email");
-  const nameValue = watch("name");
-  const surnameValue = watch("surname");
-  const phonenumberValue = watch("phonenumber");
 
   const onSave = (data: ProfileForm) => {
     AuthService.updateProfile({
@@ -111,99 +79,22 @@ export default function ProfileView() {
             </View>
 
             <View style={Styles.form}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle, Styles.input]}
-                    placeholder={PLACEHOLDERS.EMAIL_RU}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                  />
-                )}
-                name="email"
-              />
-              <FormError
-                message={
-                  (emailValue?.trim() ?? "") !== ""
-                    ? errors.email?.message
-                    : undefined
-                }
-              />
-
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle, Styles.input]}
-                    placeholder={PLACEHOLDERS.NAME}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    autoCapitalize="words"
-                  />
-                )}
-                name="name"
-              />
-              <FormError
-                message={
-                  (nameValue?.trim() ?? "") !== ""
-                    ? errors.name?.message
-                    : undefined
-                }
-              />
-
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle, Styles.input]}
-                    placeholder={PLACEHOLDERS.SURNAME}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    autoCapitalize="words"
-                  />
-                )}
-                name="surname"
-              />
-              <FormError
-                message={
-                  (surnameValue?.trim() ?? "") !== ""
-                    ? errors.surname?.message
-                    : undefined
-                }
-              />
-
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle, Styles.input]}
-                    placeholder={PLACEHOLDERS.PHONE}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={(text) => onChange(formatPhoneMask(text))}
-                    value={value}
-                    keyboardType="phone-pad"
-                    maxLength={19}
-                  />
-                )}
-                name="phonenumber"
-              />
-              <FormError
-                message={
-                  (phonenumberValue?.trim() ?? "") !== ""
-                    ? errors.phonenumber?.message
-                    : undefined
-                }
-              />
+              {createFormFields<ProfileForm>(
+                [
+                  FieldType.EMAIL,
+                  FieldType.NAME,
+                  FieldType.SURNAME,
+                  FieldType.PHONE,
+                ],
+                {
+                  control,
+                  errors,
+                  watch,
+                  placeholderOverrides: {
+                    [FieldType.EMAIL]: PLACEHOLDERS.EMAIL_RU,
+                  },
+                },
+              )}
 
               <FormButton
                 label={LABELS.SAVE}

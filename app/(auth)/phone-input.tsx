@@ -1,27 +1,22 @@
-import { formatPhoneMask } from "@/app/(auth)/static/static";
-import { getPhoneNumberRules } from "@/app/(auth)/static/static-regex";
 import { AppBackground } from "@/components/AppBackground";
 import { BackButton } from "@/components/BackButton";
+import {
+  createFormFields,
+  FieldType,
+} from "@/components/FormFieldFactory";
 import { FormButton } from "@/components/FormButton";
-import { FormError } from "@/components/FormError";
 import { ScreenTransition } from "@/components/ScreenTransition";
-import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
-import { LABELS, PLACEHOLDERS, PHONE_INPUT_TEXT } from "@/constants/constants";
+import { Styles } from "@/components/styles/LoginStyles";
+import { LABELS, PHONE_INPUT_TEXT } from "@/constants/constants";
 import { useAuth } from "@/src/auth/services/AuthService";
-import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  PhoneForm,
+  phoneSchema,
+} from "@/src/auth/services/validation/scheme/PhoneValidationScheme";
+import { useValidation } from "@/src/auth/services/validation/ValidationService";
 import { useRouter } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
-import { Text, TextInput, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as yup from "yup";
-
-interface PhoneForm {
-  phonenumber: string;
-}
-
-const phoneSchema = yup.object({
-  phonenumber: getPhoneNumberRules(),
-});
 
 export default function PhoneInputView() {
   const router = useRouter();
@@ -32,21 +27,13 @@ export default function PhoneInputView() {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<PhoneForm>({
-    mode: "onChange",
-    resolver: yupResolver(phoneSchema),
-  });
-
-  const phonenumberValue = watch("phonenumber");
+  } = useValidation<PhoneForm>(phoneSchema);
 
   const onSendCode = (data: PhoneForm) => {
     AuthService.signInWithPhoneNumber(data.phonenumber)
       .then(() => {
         router.push("/(auth)/sms-code");
       })
-      .catch(() => {
-        // Ошибка уже показана в AuthService через handleSecureError
-      });
   };
 
   return (
@@ -65,29 +52,11 @@ export default function PhoneInputView() {
             </View>
 
             <View style={Styles.form}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle, Styles.input]}
-                    placeholder={PLACEHOLDERS.PHONE}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={(text) => onChange(formatPhoneMask(text))}
-                    value={value}
-                    keyboardType="phone-pad"
-                    maxLength={19}
-                  />
-                )}
-                name="phonenumber"
-              />
-              <FormError
-                message={
-                  (phonenumberValue?.trim() ?? "") !== ""
-                    ? errors.phonenumber?.message
-                    : undefined
-                }
-              />
+              {createFormFields<PhoneForm>([FieldType.PHONE], {
+                control,
+                errors,
+                watch,
+              })}
 
               <FormButton
                 label={LABELS.SEND_CODE}

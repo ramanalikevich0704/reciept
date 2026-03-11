@@ -1,36 +1,24 @@
 import { ScreenTransition } from "@/components/ScreenTransition";
-import { fieldStyle, Styles } from "@/components/styles/LoginStyles";
-import { LABELS, LOGIN_TEXT, PLACEHOLDERS } from "@/constants/constants";
+import { Styles } from "@/components/styles/LoginStyles";
+import { LABELS, LOGIN_TEXT } from "@/constants/constants";
 
-import {
-  getEmailRules,
-  getPasswordRules,
-} from "@/app/(auth)/static/static-regex";
 import { AppBackground } from "@/components/AppBackground";
 import { CreateAccountButton } from "@/components/CreateAccountButton";
-import { FormButton } from "@/components/FormButton";
-import { FormError } from "@/components/FormError";
-import { useAuth } from "@/src/auth/services/AuthService";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "expo-router";
-import { Controller, useForm } from "react-hook-form";
 import {
-  Image,
-  Keyboard,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+  createFormFields,
+  FieldType,
+} from "@/components/FormFieldFactory";
+import { FormButton } from "@/components/FormButton";
+import { useAuth } from "@/src/auth/services/AuthService";
+import {
+  LoginForm,
+  loginSchema,
+} from "@/src/auth/services/validation/scheme/LoginValidationScheme";
+import { useValidation } from "@/src/auth/services/validation/ValidationService";
+import { useRouter } from "expo-router";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
-import * as yup from "yup";
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
 
 // Прочитать про this?
 // смена контекста колл эплай байнд
@@ -113,11 +101,12 @@ interface LoginForm {
 // FSD
 // reanimated
 // ЖЦ классовых и функциональных компонентов
-
-const loginSchema = yup.object({
-  email: getEmailRules(),
-  password: getPasswordRules(),
-});
+//Что надо доучить?
+// what threads do we have in React Native?
+// Do we have any difference between ios and android platform?
+// Насколько увеличивается разработка при нарастании кодовой базы или увеличение производительности? 
+// Влияет ли это?
+// 
 
 export default function LoginView() {
   const router = useRouter();
@@ -127,13 +116,7 @@ export default function LoginView() {
     handleSubmit,
     watch,
     formState: { isValid, errors },
-  } = useForm<LoginForm>({
-    mode: "onChange",
-    resolver: yupResolver(loginSchema),
-  });
-
-  const emailValue = watch("email");
-  const passwordValue = watch("password");
+  } = useValidation<LoginForm>(loginSchema);
 
   const login = (data: LoginForm) => {
     AuthService.login(data.email, data.password);
@@ -162,49 +145,17 @@ export default function LoginView() {
           </View>
           <View>
             <View style={{ marginBottom: 44 }}>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle, { marginBottom: 12 }]}
-                    placeholder={PLACEHOLDERS.EMAIL}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
-                )}
-                name="email"
-              />
-              <FormError
-                message={
-                  (emailValue?.trim() ?? "") !== ""
-                    ? errors.email?.message
-                    : undefined
-                }
-              />
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={[...fieldStyle]}
-                    placeholder={PLACEHOLDERS.PASSWORD}
-                    placeholderTextColor={Styles.whiteText.color}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    secureTextEntry
-                  />
-                )}
-                name="password"
-              />
-              <FormError
-                message={
-                  (passwordValue?.trim() ?? "") !== ""
-                    ? errors.password?.message
-                    : undefined
-                }
-              />
+              {createFormFields<LoginForm>(
+                [FieldType.EMAIL, FieldType.PASSWORD],
+                {
+                  control,
+                  errors,
+                  watch,
+                  styleOverrides: {
+                    [FieldType.EMAIL]: { marginBottom: 12 },
+                  },
+                },
+              )}
             </View>
             {/* <Text
               style={Styles.forgetPassword}
